@@ -144,33 +144,34 @@
     </section>
 
     <!-- Gift -->
-
-    <section id="gift">
-  <div class="section-label">Wedding Gift</div>
-  <div class="section-title">Tanda Kasih</div>
+     <section id="gift">
+  <div class="section-label reveal">Wedding Gift</div>
+  <div class="section-title reveal d1">Tanda Kasih</div>
   <div class="divider-leaf"></div>
-  
-  <p class="reveal" style="font-size:13px; opacity:.7; line-height:1.8; margin-bottom:30px;">
-    Doa restu Anda merupakan karunia yang sangat berarti bagi kami. Namun jika Anda ingin memberikan tanda kasih, Anda dapat mengirimkannya melalui:
+  <p class="reveal d2" style="font-size:13px;opacity:.7;line-height:1.9;margin-bottom:30px;">
+    Doa restu Anda merupakan karunia terindah bagi kami. Namun jika Anda ingin memberikan tanda kasih, Anda dapat memilih metode pembayaran di bawah ini:
   </p>
 
   <div class="gift-container">
-    <div class="gift-card reveal-left">
-      <div class="gift-icon">💳</div>
-      <div class="gift-bank">Bank Central Asia (BCA)</div>
-      <div class="gift-number" id="rek-bca">1234567890</div>
-      <div class="gift-name">a.n Ina Nikmatul Chasanah</div>
-      <button class="btn-copy" onclick="copyText('rek-bca', this)">Salin Rekening</button>
-    </div>
-
-    <div class="gift-card reveal-right">
+    <div class="gift-card reveal">
       <div class="gift-icon">🎁</div>
-      <div class="gift-bank">Kirim Kado (Alamat)</div>
-      <div class="gift-address" id="addr-gift">
-        Dsn. Grogol RT/RW 006/006 Ds. Grogol Kec. Diwek Kab. Jombang
+      
+      <div class="form-group" style="text-align: left;">
+        <label>Pilih Metode Pembayaran:</label>
+        <select id="gift-selector" onchange="updateGiftDisplay()" class="gift-select">
+          <option value="bri">Bank BRI</option>
+          <option value="seabank">SeaBank</option>
+          <option value="ewallet">E-Wallet (GoPay/OVO/DANA)</option>
+          <option value="kado">Kirim Kado (Alamat)</option>
+        </select>
       </div>
-      <div class="gift-name">Penerima: Ina Nikmatul Chasanah</div>
-      <button class="btn-copy" onclick="copyText('addr-gift', this)">Salin Alamat</button>
+
+      <div id="gift-detail-box" class="gift-detail-animate">
+        <div class="bank-name" id="display-bank">BRI</div>
+        <div class="account-number" id="display-number">3638 0103 6696 532</div>
+        <div class="account-holder" id="display-holder">a.n. INA NIKMATUL CHASANAH</div>
+        <button class="btn-copy" id="btn-copy-gift" onclick="copyGiftText()">Salin Nomor</button>
+      </div>
     </div>
   </div>
 </section>

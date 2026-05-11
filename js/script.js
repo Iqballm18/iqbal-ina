@@ -235,20 +235,20 @@ function addRevealClasses() {
   }
 }
 
-/* ============================================================
-   COPY TO CLIPBOARD
-   ============================================================ */
+/* ===================== COPY TO CLIPBOARD ===================== */
 function copyText(elementId, btn) {
   const text = document.getElementById(elementId).innerText;
   const originalText = btn.innerText;
 
   navigator.clipboard.writeText(text).then(() => {
-    btn.innerText = '✓ Berhasil Disalin';
-    btn.style.background = 'var(--rose)';
+    btn.innerText = "✓ Tersalin";
+    btn.style.background = "var(--green)";
+    btn.style.color = "#fff";
     
     setTimeout(() => {
       btn.innerText = originalText;
-      btn.style.background = '';
+      btn.style.background = "";
+      btn.style.color = "";
     }, 2000);
   }).catch(err => {
     console.error('Gagal menyalin: ', err);
@@ -436,4 +436,68 @@ function toggleMusic(e) {
     btn.classList.remove('playing');
     icon.textContent = '🔇';
   }
+}
+
+const giftData = {
+  bri: {
+    bank: "BRI",
+    number: "3638 0103 6696 532",
+    holder: "a.n. INA NIKMATUL CHASANAH",
+    btnText: "Salin Nomor"
+  },
+  seabank: {
+    bank: "SeaBank",
+    number: "901683771990",
+    holder: "a.n. INA NIKMATUL CHASANAH",
+    btnText: "Salin Nomor"
+  },
+  ewallet: {
+    bank: "E-Wallet",
+    number: "088224906918",
+    holder: "GoPay, OVO, DANA, ShopeePay",
+    btnText: "Salin Nomor"
+  },
+  kado: {
+    bank: "Alamat Pengiriman",
+    number: "Dsn. Grogol RT/RW 006/006 Ds. Grogol Kec. Diwek Kab. Jombang",
+    holder: "Penerima: Ina Nikmatul Chasanah",
+    btnText: "Salin Alamat"
+  }
+};
+
+function updateGiftDisplay() {
+  const selector = document.getElementById('gift-selector');
+  const selected = giftData[selector.value];
+  const detailBox = document.getElementById('gift-detail-box');
+
+  // Animasi fade out sederhana
+  detailBox.style.opacity = '0';
+  
+  setTimeout(() => {
+    document.getElementById('display-bank').innerText = selected.bank;
+    document.getElementById('display-number').innerText = selected.number;
+    document.getElementById('display-holder').innerText = selected.holder;
+    document.getElementById('btn-copy-gift').innerText = selected.btnText;
+    
+    // Fade in kembali
+    detailBox.style.opacity = '1';
+  }, 200);
+}
+
+function copyGiftText() {
+  const text = document.getElementById('display-number').innerText;
+  const btn = document.getElementById('btn-copy-gift');
+  const originalText = btn.innerText;
+
+  navigator.clipboard.writeText(text).then(() => {
+    btn.innerText = "✓ Tersalin";
+    btn.style.background = "var(--green)";
+    btn.style.color = "#fff";
+    
+    setTimeout(() => {
+      btn.innerText = originalText;
+      btn.style.background = "";
+      btn.style.color = "";
+    }, 2000);
+  });
 }
