@@ -284,6 +284,43 @@ section {
 }
 .divider-leaf.revealed { transform: scaleX(1); }
 
+/* ===================== QURAN QUOTE STYLE ===================== */
+.quran-quote {
+  margin: 30px auto;
+  padding: 0 20px;
+  max-width: 500px;
+  position: relative;
+}
+
+.quran-quote p {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 16px;
+  line-height: 1.8;
+  color: var(--text);
+  opacity: 0.8;
+  margin-bottom: 10px;
+}
+
+.quran-surah {
+  font-family: 'Jost', sans-serif;
+  font-weight: 500;
+  font-size: 13px;
+  letter-spacing: 1px;
+  color: var(--rose); /* Menggunakan warna aksen dari tema Anda */
+  text-transform: uppercase;
+}
+
+/* Menambahkan garis halus dekoratif di atas dan bawah */
+.quran-quote::before, .quran-quote::after {
+  content: "";
+  display: block;
+  width: 40px;
+  height: 1px;
+  background: var(--blush);
+  margin: 15px auto;
+}
+
 /* ============================================================
    COUNTDOWN
    ============================================================ */
@@ -394,12 +431,12 @@ section {
 
 .couple-name {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 24px;
+  font-size: 28px;
   color: var(--dark);
   margin-bottom: 8px;
 }
 .couple-parents {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--text);
   opacity: 0.7;
   line-height: 1.8;
@@ -494,64 +531,74 @@ section {
 .btn-event:hover { opacity: 0.8; transform: translateY(-2px); }
 
 /* ============================================================
-   STORY TIMELINE
+   WEDDING GIFT
    ============================================================ */
-.story-timeline {
-  position: relative;
-  margin-top: 48px;
-}
-
-/* vertical line grows downward */
-.story-timeline::before {
-  content: '';
-  position: absolute;
-  left: 50%; top: 0; bottom: 0;
-  width: 2px;
-  background: linear-gradient(to bottom, var(--green-light), var(--blush));
-  transform: translateX(-50%) scaleY(0);
-  transform-origin: top;
-  transition: transform 1.4s cubic-bezier(.22,.68,0,1);
-}
-.story-timeline.line-grow::before { transform: translateX(-50%) scaleY(1); }
-
-.story-item {
+.gift-container {
   display: grid;
-  grid-template-columns: 1fr 60px 1fr;
-  align-items: center;
-  margin-bottom: 48px;
-  position: relative;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
 }
 
-.story-item:nth-child(odd)  .story-text  { text-align: right; grid-column: 1; }
-.story-item:nth-child(odd)  .story-empty { grid-column: 3; }
-.story-item:nth-child(even) .story-text  { text-align: left;  grid-column: 3; }
-.story-item:nth-child(even) .story-empty { grid-column: 1; }
-
-/* dots pop in */
-.story-dot {
-  grid-column: 2;
-  width: 20px; height: 20px;
-  background: var(--rose);
-  border-radius: 50%;
-  margin: 0 auto;
-  border: 3px solid var(--cream);
-  box-shadow: 0 0 0 3px var(--rose);
-  z-index: 1;
-  transform: scale(0);
-  transition: transform 0.55s cubic-bezier(.34,1.56,.64,1);
+.gift-card {
+  background: #fff;
+  padding: 30px 20px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  text-align: center;
+  border: 1px solid rgba(165,184,152,0.2);
 }
-.story-dot.revealed { transform: scale(1); }
 
-.story-title {
+.gift-icon {
+  font-size: 30px;
+  margin-bottom: 15px;
+}
+
+.gift-bank {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 14px; letter-spacing: 1px;
-  color: var(--rose);
-  text-transform: uppercase;
-  margin-bottom: 6px;
+  font-size: 20px;
+  color: var(--dark);
+  font-weight: 600;
 }
-.story-text p {
-  font-size: 13px; color: var(--text);
-  opacity: 0.8; line-height: 1.7;
+
+.gift-number, .gift-address {
+  font-size: 16px;
+  color: var(--rose);
+  font-weight: 500;
+  margin: 10px 0 5px;
+  word-wrap: break-word;
+}
+
+.gift-address {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text);
+  opacity: 0.8;
+}
+
+.gift-name {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 20px;
+  color: var(--text);
+}
+
+.btn-copy {
+  padding: 8px 20px;
+  background: var(--green);
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  font-size: 11px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-copy:hover {
+  background: var(--rose);
+  transform: translateY(-2px);
 }
 
 /* ============================================================
@@ -559,34 +606,31 @@ section {
    ============================================================ */
 .gallery-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  margin-top: 36px;
+  grid-template-columns: repeat(2, 1fr); /* Membuat 2 kolom sejajar */
+  gap: 15px;
+  margin-top: 30px;
 }
 
 .gallery-item {
-  aspect-ratio: 1;
+  aspect-ratio: 1 / 1; /* Membuat foto menjadi kotak (opsional, bisa dihapus jika ingin orientasi asli) */
   overflow: hidden;
-  border-radius: 8px;
-  cursor: pointer;
-  background: var(--blush);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 30px;
-  opacity: 0;
-  transform: scale(0.85);
-  transition: opacity 0.5s ease, transform 0.55s cubic-bezier(.34,1.2,.64,1);
+  border-radius: 12px;
 }
-.gallery-item.revealed  { opacity: 1; transform: scale(1); }
-.gallery-item:hover      { transform: scale(0.96); }
+
 .gallery-item img {
-  width: 100%; height: 100%;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   transition: transform 0.5s ease;
 }
-.gallery-item:hover img  { transform: scale(1.1); }
 
+/* Responsif untuk HP agar tetap dua kolom atau jadi satu kolom */
+@media (max-width: 480px) {
+  .gallery-grid {
+    grid-template-columns: repeat(2, 1fr); /* Tetap 2 kolom di HP */
+    gap: 10px;
+  }
+}
 /* ============================================================
    UCAPAN FORM
    ============================================================ */
@@ -769,7 +813,7 @@ footer::before {
   pointer-events: none;
 }
 footer .footer-label {
-  font-size: 10px; letter-spacing: 4px;
+  font-size: 18px; letter-spacing: 4px;
   text-transform: uppercase; color: var(--green-light); margin-bottom: 12px;
 }
 footer .footer-names {

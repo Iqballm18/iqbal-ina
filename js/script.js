@@ -236,6 +236,26 @@ function addRevealClasses() {
 }
 
 /* ============================================================
+   COPY TO CLIPBOARD
+   ============================================================ */
+function copyText(elementId, btn) {
+  const text = document.getElementById(elementId).innerText;
+  const originalText = btn.innerText;
+
+  navigator.clipboard.writeText(text).then(() => {
+    btn.innerText = '✓ Berhasil Disalin';
+    btn.style.background = 'var(--rose)';
+    
+    setTimeout(() => {
+      btn.innerText = originalText;
+      btn.style.background = '';
+    }, 2000);
+  }).catch(err => {
+    console.error('Gagal menyalin: ', err);
+  });
+}
+
+/* ============================================================
    GALLERY LIGHTBOX
    ============================================================ */
 function openLightbox(src) {
