@@ -98,6 +98,31 @@ function startCountdown() {
   setInterval(update, 1000);
 }
 
+function initCalendarLink() {
+  const eventTitle = "Pernikahan Iqbal & Ina";
+  const eventDetails = "Mohon doa restu dan kehadirannya dalam acara pernikahan kami.";
+  const eventLocation = "Dsn. Grogol RT/RW 006/006 Ds. Grogol Kec. Diwek Kab. Jombang";
+  
+  // Format tanggal untuk Google Calendar (YYYYMMDDTHHMMSSZ)
+  // Akad dimulai jam 08:00 WIB (UTC+7), maka dalam UTC adalah 01:00
+  const startDate = "20260821T010000Z"; 
+  const endDate = "20260821T100000Z"; // Asumsi selesai jam 17:00 WIB (10:00 UTC)
+
+  const calendarUrl = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(eventTitle)}&dates=${startDate}/${endDate}&details=${encodeURIComponent(eventDetails)}&location=${encodeURIComponent(eventLocation)}&sf=true&output=xml`;
+
+  const calendarBtn = document.getElementById('btn-google-calendar');
+  if (calendarBtn) {
+    calendarBtn.href = calendarUrl;
+  }
+}
+
+// Panggil fungsi ini di dalam openInvitation agar muncul saat undangan dibuka
+const _origOpenCalendar = window.openInvitation;
+window.openInvitation = function(e) {
+  _origOpenCalendar(e);
+  initCalendarLink();
+};
+
 /* ============================================================
    SCROLL-REVEAL ENGINE
    ============================================================ */

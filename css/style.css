@@ -940,3 +940,50 @@ footer .footer-credit {
   transform: scale(1.1);
   background: var(--rose);
 }
+
+
+/* Tombol Instagram Mempelai */
+.btn-ig {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 6px 14px;
+  border: 1px solid var(--rose);
+  border-radius: 20px;
+  color: var(--rose);
+  text-decoration: none;
+  font-size: 13px;
+  transition: all 0.3s ease;
+}
+
+.btn-ig:hover {
+  background: var(--rose);
+  color: #fff;
+}
+
+.btn-ig img {
+  filter: grayscale(1); /* Membuat logo IG menyatu dengan tema */
+  transition: filter 0.3s ease;
+}
+
+.btn-ig:hover img {
+  filter: grayscale(0) brightness(2);
+}
+
+/* Tombol Event / Maps */
+.btn-event {
+  display: inline-block;
+  padding: 12px 24px;
+  background: var(--green);
+  color: #fff;
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: opacity 0.3s;
+}
+
+.btn-event:hover {
+  opacity: 0.9;
+}
