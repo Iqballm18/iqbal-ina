@@ -207,32 +207,42 @@
 
     <!-- UCAPAN -->
     <section id="ucapan">
-      <div class="section-label">Doa &amp; Ucapan</div>
-      <div class="section-title">Pesan untuk Mempelai</div>
-      <div class="divider-leaf"></div>
+  <div class="section-label">Doa & Ucapan</div>
+  <div class="section-title">Pesan untuk Mempelai</div>
+  <div class="divider-leaf"></div>
 
-      <div class="ucapan-form">
-        <div class="form-group">
-          <label>Nama</label>
-          <input type="text" id="ucapan-nama" placeholder="Nama Anda">
-        </div>
-        <div class="form-group">
-          <label>Pesan untuk Mempelai</label>
-          <textarea id="ucapan-pesan" rows="4" placeholder="Tuliskan doa dan ucapan Anda..."></textarea>
-        </div>
-        <button class="btn-submit" onclick="kirimUcapan()">Kirim Ucapan</button>
-      </div>
+  <div class="ucapan-form">
+    <div class="form-group">
+      <label>Nama</label>
+      <input type="text" id="ucapan-nama" placeholder="Nama Anda">
+    </div>
 
-      <div class="messages-list" id="messages-list">
-        <div class="message-item">
-          <div class="message-icon">💌</div>
-          <div>
-            <div class="message-name">Elizabeth Bennet &amp; Darcy</div>
-            <div class="message-text">Sejatinya pernikahan adalah lembaran baru kehidupan, kebahagiaan, kebersamaan, dan hal-hal baik lainnya yang menyertai.</div>
-          </div>
-        </div>
+    <div class="form-group">
+      <label>Konfirmasi Kehadiran</label>
+      <div class="status-hadir-container">
+        <button type="button" class="btn-status" onclick="setStatusHadir(this, 'Hadir')">Hadir</button>
+        <button type="button" class="btn-status" onclick="setStatusHadir(this, 'Tidak Hadir')">Tidak Hadir</button>
+        <button type="button" class="btn-status" onclick="setStatusHadir(this, 'Ragu-ragu')">Ragu-ragu</button>
       </div>
-    </section>
+      <input type="hidden" id="ucapan-status" value="">
+    </div>
+
+    <div class="form-group">
+      <label>Pesan untuk Mempelai</label>
+      <textarea id="ucapan-pesan" rows="4" placeholder="Tuliskan doa dan ucapan Anda..."></textarea>
+    </div>
+    <button class="btn-submit" onclick="kirimUcapan()">Kirim Ucapan</button>
+  </div>
+
+  <div id="messages-list" class="messages-list" style="margin-top: 30px; max-height: 500px; overflow-y: auto;">
+</div>
+
+<div id="pagination-controls" style="display: flex; justify-content: center; gap: 15px; margin-top: 20px;">
+  <button id="prev-page" class="btn-copy" onclick="changePage(-1)" style="display:none;">&laquo; Sebelumnya</button>
+  <span id="page-info" style="font-size: 13px; align-self: center; opacity: 0.7;"></span>
+  <button id="next-page" class="btn-copy" onclick="changePage(1)" style="display:none;">Selanjutnya &raquo;</button>
+</div>
+</section>
 
     <!-- FOOTER -->
     <footer>
@@ -245,7 +255,7 @@
     </footer>
 
   </div><!-- end main-content -->
-  </div><audio id="wedding-audio" loop>
+  <audio id="wedding-audio" loop>
       <source src="media/Barasuara - Terbuang Dalam Waktu Official Lyric Video (mp3cut.net).m4a" type="audio/mp4">
       Your browser does not support the audio element.
     </audio>

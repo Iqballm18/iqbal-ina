@@ -1,6 +1,7 @@
 /* ============================================================
    OPEN INVITATION
    ============================================================ */
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby5XWkYAXiaI4nNMizOQ7HkCeuSiHfrQu3h0AVvsFyawPIxxoLFmFTbML53MukPcbL8/exec";
 function openInvitation(e) {
   e.preventDefault();
 
@@ -14,7 +15,7 @@ function openInvitation(e) {
     musicBtn.classList.add('playing');
   }
 
-  // cover fade out (kode lama kamu tetap di bawah ini)
+  // cover fade out
   const cover = document.getElementById('cover');
   cover.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
   cover.style.opacity    = '0';
@@ -29,6 +30,8 @@ function openInvitation(e) {
       startCountdown();
       initScrollReveal();
       spawnPetals();
+      initCalendarLink(); // Panggil fungsi kalender di sini
+      setTimeout(initActiveNav, 700); // Panggil nav highlight di sini
     });
   }, 600);
 }
@@ -115,13 +118,6 @@ function initCalendarLink() {
     calendarBtn.href = calendarUrl;
   }
 }
-
-// Panggil fungsi ini di dalam openInvitation agar muncul saat undangan dibuka
-const _origOpenCalendar = window.openInvitation;
-window.openInvitation = function(e) {
-  _origOpenCalendar(e);
-  initCalendarLink();
-};
 
 /* ============================================================
    SCROLL-REVEAL ENGINE
@@ -341,46 +337,111 @@ function submitRSVP() {
 /* ============================================================
    UCAPAN / MESSAGES
    ============================================================ */
-function kirimUcapan() {
-  const namaEl  = document.getElementById('ucapan-nama');
-  const pesanEl = document.getElementById('ucapan-pesan');
-  const nama    = namaEl.value.trim();
-  const pesan   = pesanEl.value.trim();
+// Fungsi untuk memilih status kehadiran
+function setStatusHadir(btn, status) {
+  // Reset semua tombol di container yang sama
+  const container = btn.parentElement;
+  container.querySelectorAll('.btn-status').forEach(b => b.classList.remove('active'));
+  
+  // Aktifkan tombol yang diklik
+  btn.classList.add('active');
+  
+  // Set value ke hidden input
+  document.getElementById('ucapan-status').value = status;
+}
 
-  if (!nama || !pesan) {
-    // shake the empty field
-    const emptyEl = !nama ? namaEl : pesanEl;
-    emptyEl.style.animation = 'shake 0.4s ease';
-    emptyEl.addEventListener('animationend', () => emptyEl.style.animation = '', { once: true });
+// Update fungsi kirimUcapan yang sudah ada
+async function kirimUcapan() {
+  const namaEl   = document.getElementById('ucapan-nama');
+  const pesanEl  = document.getElementById('ucapan-pesan');
+  const statusEl = document.getElementById('ucapan-status');
+
+  const btnSubmit = document.querySelector('#ucapan .btn-submit');
+  
+  const nama   = namaEl.value.trim();
+  const pesan  = pesanEl.value.trim();
+  const status = statusEl.value;
+
+  if (!nama || !pesan || !status) {
+    alert("Mohon isi nama, pesan, dan konfirmasi kehadiran Anda.");
     return;
   }
 
-  const list = document.getElementById('messages-list');
-  const item = document.createElement('div');
-  item.className = 'message-item pop-in';
-  item.innerHTML = `
-    <div class="message-icon">💌</div>
-    <div>
-      <div class="message-name">${escapeHtml(nama)}</div>
-      <div class="message-text">${escapeHtml(pesan)}</div>
-    </div>
-  `;
-  list.insertBefore(item, list.firstChild);
+  // Efek Loading
+  btnSubmit.disabled = true;
+  btnSubmit.innerHTML = '<span>⌛ Mengirim...</span>';
 
-  namaEl.value  = '';
-  pesanEl.value = '';
+  try {
+    // Kirim ke Google Sheets
+    await fetch(SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify({ nama, status, pesan })
+    });
 
-  // button feedback
-  const btn = document.querySelector('#ucapan .btn-submit');
-  if (btn) {
-    btn.textContent = '🌸 Terkirim!';
-    btn.style.background = 'var(--green)';
+    // Feedback Berhasil
+    btnSubmit.textContent = '🌸 Terkirim!';
+    btnSubmit.style.background = 'var(--green)';
+    
+    // Reset Form
+    namaEl.value = '';
+    pesanEl.value = '';
+    statusEl.value = '';
+    document.querySelectorAll('.btn-status').forEach(b => b.classList.remove('active'));
+
+    // Muat ulang daftar pesan agar yang baru muncul
+    loadMessages();
+
     setTimeout(() => {
-      btn.textContent = 'Kirim Ucapan';
-      btn.style.background = '';
+      btnSubmit.disabled = false;
+      btnSubmit.textContent = 'Kirim Ucapan';
+      btnSubmit.style.background = '';
     }, 3000);
+
+  } catch (error) {
+    console.error('Error!', error.message);
+    alert("Maaf, gagal mengirim ucapan. Silakan coba lagi.");
+    btnSubmit.disabled = false;
+    btnSubmit.textContent = 'Kirim Ucapan';
   }
 }
+
+async function loadMessages() {
+  const listContainer = document.getElementById('messages-list');
+  listContainer.innerHTML = '<p style="text-align:center; font-size:12px; opacity:0.6;">Memuat pesan...</p>';
+
+  try {
+    const response = await fetch(SCRIPT_URL);
+    const data = await response.json();
+
+    if (data.length === 0) {
+      listContainer.innerHTML = '<p style="text-align:center; font-size:12px; opacity:0.5;">Belum ada ucapan.</p>';
+      return;
+    }
+
+    // Render data ke HTML
+    listContainer.innerHTML = data.map(item => `
+      <div class="message-item revealed pop-in">
+        <div class="message-icon">💌</div>
+        <div>
+          <div class="message-name">
+            ${escapeHtml(item.nama)} 
+            <span class="message-status">${item.status}</span>
+          </div>
+          <div class="message-text">${escapeHtml(item.pesan)}</div>
+        </div>
+      </div>
+    `).join('');
+
+  } catch (error) {
+    listContainer.innerHTML = '<p style="text-align:center; color:red; font-size:12px;">Gagal memuat ucapan.</p>';
+    console.error(error);
+  }
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  gantiNamaTamu();
+  loadMessages(); // Tambahkan ini agar pesan langsung muncul saat web dibuka
+});
 
 function escapeHtml(str) {
   return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
@@ -435,14 +496,6 @@ function initActiveNav() {
 
   sections.forEach(s => io.observe(s));
 }
-
-/* kick off nav highlight when main content opens */
-const _origOpen = window.openInvitation;
-window.openInvitation = function(e) {
-  _origOpen(e);
-  setTimeout(initActiveNav, 700);
-};
-
 
 /* ============================================================
    MUSIC TOGGLE

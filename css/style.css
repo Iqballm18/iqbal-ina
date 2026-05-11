@@ -712,6 +712,47 @@ section {
 .btn-submit:hover { background: var(--green); transform: translateY(-2px); }
 .btn-submit:hover::after { transform: translateX(100%); }
 
+/* Style Tambahan untuk Status Hadir */
+.status-hadir-container {
+  display: flex;
+  gap: 10px;
+  margin-top: 5px;
+  flex-wrap: wrap;
+}
+
+.btn-status {
+  flex: 1;
+  padding: 10px 5px;
+  border: 1.5px solid var(--blush);
+  background: transparent;
+  color: var(--text);
+  border-radius: 8px;
+  font-family: 'Jost', sans-serif;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-status.active {
+  background: var(--green);
+  color: #fff;
+  border-color: var(--green);
+}
+
+/* Badge status di dalam list pesan */
+.message-status {
+  display: inline-block;
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: var(--blush);
+  color: var(--dark);
+  margin-left: 8px;
+  vertical-align: middle;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
 /* ============================================================
    MESSAGES
    ============================================================ */
