@@ -9,6 +9,9 @@ const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby5XWkYAXiaI4nNMizOQ
 function openInvitation(e) {
   e.preventDefault();
 
+  // Ambil nama tamu dari input (jika diisi manual)
+  getGuestNameFromInput();
+
   // Cover fade out
   const cover = document.getElementById('cover');
   cover.style.transition = 'opacity 0.7s ease, transform 0.7s ease';
@@ -502,13 +505,38 @@ function copyGiftText() {
 }
 
 /* ============================================================
-   NAMA TAMU DARI URL
+   NAMA TAMU DARI URL — atau input manual jika tidak ada
    ============================================================ */
+let guestName = '';
+
 function gantiNamaTamu() {
   const name = new URLSearchParams(window.location.search).get('to');
+  const guestEl = document.querySelector('.cover-guest');
+  const inputWrap = document.getElementById('cover-guest-input');
+  const placeEl = document.querySelector('.cover-place');
+
   if (name) {
-    const el = document.querySelector('.cover-guest');
-    if (el) el.innerText = name;
+    // Ada parameter ?to= → tampilkan nama langsung
+    guestName = name;
+    if (guestEl) guestEl.innerText = name;
+  } else {
+    // Tidak ada parameter → sembunyikan teks default, tampilkan input
+    if (guestEl) guestEl.style.display = 'none';
+    if (placeEl) placeEl.style.display = 'none';
+    if (inputWrap) inputWrap.style.display = 'block';
+  }
+}
+
+/* Ambil nama dari input cover saat buka undangan */
+function getGuestNameFromInput() {
+  const input = document.getElementById('input-nama-tamu');
+  if (input && input.value.trim()) {
+    guestName = input.value.trim();
+  }
+  // Auto-fill ke form ucapan
+  const ucapanNama = document.getElementById('ucapan-nama');
+  if (ucapanNama && guestName) {
+    ucapanNama.value = guestName;
   }
 }
 
@@ -518,6 +546,7 @@ function gantiNamaTamu() {
 function initActiveNav() {
   const sections = document.querySelectorAll('section[id], #countdown-section');
   const navLinks = document.querySelectorAll('.sticky-nav a');
+  const sideNavDots = document.querySelectorAll('.side-nav-dot');
 
   if (!sections.length) return;
 
@@ -525,8 +554,13 @@ function initActiveNav() {
     entries.forEach(entry => {
       if (!entry.isIntersecting) return;
       const id = entry.target.id;
+      // Update top nav
       navLinks.forEach(a => {
         a.classList.toggle('active-nav', a.getAttribute('href') === `#${id}`);
+      });
+      // Update side nav dots
+      sideNavDots.forEach(dot => {
+        dot.classList.toggle('active-nav', dot.getAttribute('href') === `#${id}`);
       });
     });
   }, { threshold: 0.35 });
@@ -585,6 +619,21 @@ document.addEventListener('keydown', function(e) {
       closeLightbox();
     }
   }
+});
+
+/* ============================================================
+   SIDE NAV TOGGLE (hide/show dots)
+   ============================================================ */
+document.addEventListener('DOMContentLoaded', () => {
+  const toggleBtn = document.getElementById('side-nav-toggle');
+  const sideNav = document.getElementById('side-nav');
+  if (!toggleBtn || !sideNav) return;
+
+  toggleBtn.addEventListener('click', () => {
+    sideNav.classList.toggle('collapsed');
+    const isCollapsed = sideNav.classList.contains('collapsed');
+    toggleBtn.setAttribute('aria-label', isCollapsed ? 'Tampilkan navigasi' : 'Sembunyikan navigasi');
+  });
 });
 
 /* ============================================================

@@ -1661,3 +1661,175 @@ footer .footer-credit {
   position: relative;
   z-index: 3;
 }
+
+/* ============================================================
+   MOBILE FLOATING SIDE NAV (dots with icons)
+   ============================================================ */
+.side-nav {
+  display: none; /* hidden on desktop */
+  position: fixed;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 200;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.side-nav-dot {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(250, 246, 240, 0.92);
+  border: 1px solid rgba(201, 169, 110, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--green);
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  position: relative;
+  backdrop-filter: blur(8px);
+}
+
+.side-nav-dot:hover {
+  background: var(--green);
+  color: #fff;
+  border-color: var(--green);
+  transform: scale(1.15);
+  box-shadow: 0 4px 16px rgba(107, 124, 94, 0.35);
+}
+
+.side-nav-dot.active-nav {
+  background: var(--rose);
+  color: #fff;
+  border-color: var(--rose);
+  box-shadow: 0 3px 14px rgba(201, 130, 107, 0.4);
+}
+
+/* Tooltip label on hover */
+.side-nav-dot::before {
+  content: attr(data-label);
+  position: absolute;
+  right: calc(100% + 10px);
+  top: 50%;
+  transform: translateY(-50%) translateX(5px);
+  background: var(--dark);
+  color: #fff;
+  font-family: 'Jost', sans-serif;
+  font-size: 10px;
+  letter-spacing: 1px;
+  padding: 5px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.side-nav-dot:hover::before {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+}
+
+/* Show side-nav on mobile, hide sticky-nav */
+@media (max-width: 768px) {
+  .sticky-nav {
+    display: none;
+  }
+  .side-nav {
+    display: flex;
+  }
+}
+
+/* ============================================================
+   SIDE NAV TOGGLE (hide/show)
+   ============================================================ */
+.side-nav-toggle {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: rgba(250, 246, 240, 0.85);
+  border: 1px solid rgba(201, 169, 110, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text);
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  margin-bottom: 4px;
+  backdrop-filter: blur(8px);
+}
+.side-nav-toggle:hover {
+  background: var(--cream);
+  border-color: var(--gold);
+}
+.side-nav-toggle .toggle-icon {
+  transition: transform 0.3s ease;
+}
+
+/* Collapsed state — dots hidden, arrow flipped */
+.side-nav.collapsed .side-nav-dot {
+  opacity: 0;
+  transform: translateX(20px) scale(0.5);
+  pointer-events: none;
+}
+.side-nav.collapsed .side-nav-toggle .toggle-icon {
+  transform: rotate(180deg);
+}
+
+/* Smooth transition for dots */
+.side-nav .side-nav-dot {
+  transition: all 0.3s cubic-bezier(.34, 1.2, .64, 1);
+}
+.side-nav.collapsed .side-nav-dot:nth-child(2) { transition-delay: 0.02s; }
+.side-nav.collapsed .side-nav-dot:nth-child(3) { transition-delay: 0.04s; }
+.side-nav.collapsed .side-nav-dot:nth-child(4) { transition-delay: 0.06s; }
+.side-nav.collapsed .side-nav-dot:nth-child(5) { transition-delay: 0.08s; }
+.side-nav.collapsed .side-nav-dot:nth-child(6) { transition-delay: 0.10s; }
+
+/* When expanding back */
+.side-nav:not(.collapsed) .side-nav-dot:nth-child(2) { transition-delay: 0.10s; }
+.side-nav:not(.collapsed) .side-nav-dot:nth-child(3) { transition-delay: 0.08s; }
+.side-nav:not(.collapsed) .side-nav-dot:nth-child(4) { transition-delay: 0.06s; }
+.side-nav:not(.collapsed) .side-nav-dot:nth-child(5) { transition-delay: 0.04s; }
+.side-nav:not(.collapsed) .side-nav-dot:nth-child(6) { transition-delay: 0.02s; }
+
+/* ============================================================
+   COVER GUEST NAME INPUT (when no ?to= parameter)
+   ============================================================ */
+.cover-guest-input {
+  position: relative;
+  z-index: 3;
+  margin-top: 10px;
+  width: 100%;
+  max-width: 280px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.input-nama-tamu {
+  width: 100%;
+  padding: 12px 18px;
+  border: 1.5px solid rgba(201, 169, 110, 0.4);
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(6px);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  color: var(--dark);
+  text-align: center;
+  outline: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+.input-nama-tamu::placeholder {
+  color: var(--text);
+  opacity: 0.45;
+  font-style: italic;
+}
+.input-nama-tamu:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(201, 169, 110, 0.15);
+}
