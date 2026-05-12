@@ -1061,13 +1061,13 @@ footer::after {
   content: '';
   position: absolute;
   top: 20px; bottom: 20px; left: 20px; right: 20px;
-  border: 1px solid rgba(201,169,110,0.18);
+  border: 1px solid rgba(238, 236, 233, 0.18);
   pointer-events: none;
 }
 footer .footer-bismillah {
   font-family: 'Cormorant Garamond', serif;
   font-size: 13px; letter-spacing: 2px;
-  color: rgba(201,169,110,0.75);
+  color: rgb(255, 255, 255);
   margin-bottom: 16px;
 }
 footer .footer-label {
