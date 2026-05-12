@@ -12,13 +12,70 @@
   <!-- ===================== COVER ===================== -->
   <div id="cover">
     <div class="cover-leaf-top"></div>
-    <div class="cover-label fade-up">Undangan Pernikahan</div>
-    <div class="cover-names fade-up delay-1">Iqbal<br><span>&</span><br>Ina</div>
+    <div class="cover-leaf-bottom"></div>
+
+    <!-- Gold corner frame -->
+    <div class="cover-frame"><span></span></div>
+
+    <!-- Gold corner SVG ornaments -->
+    <div class="corner-ornament tl">
+      <svg viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 68 Q4 4 68 4" stroke="#c9a96e" stroke-width="0.8" fill="none" opacity="0.6"/>
+        <path d="M4 48 Q4 4 48 4" stroke="#c9a96e" stroke-width="0.5" fill="none" opacity="0.4"/>
+        <circle cx="4" cy="4" r="3" fill="#c9a96e" opacity="0.7"/>
+        <circle cx="36" cy="4" r="1.5" fill="#c9a96e" opacity="0.5"/>
+        <circle cx="4" cy="36" r="1.5" fill="#c9a96e" opacity="0.5"/>
+      </svg>
+    </div>
+    <div class="corner-ornament tr">
+      <svg viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 68 Q4 4 68 4" stroke="#c9a96e" stroke-width="0.8" fill="none" opacity="0.6"/>
+        <path d="M4 48 Q4 4 48 4" stroke="#c9a96e" stroke-width="0.5" fill="none" opacity="0.4"/>
+        <circle cx="4" cy="4" r="3" fill="#c9a96e" opacity="0.7"/>
+        <circle cx="36" cy="4" r="1.5" fill="#c9a96e" opacity="0.5"/>
+        <circle cx="4" cy="36" r="1.5" fill="#c9a96e" opacity="0.5"/>
+      </svg>
+    </div>
+    <div class="corner-ornament bl">
+      <svg viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 68 Q4 4 68 4" stroke="#c9a96e" stroke-width="0.8" fill="none" opacity="0.6"/>
+        <path d="M4 48 Q4 4 48 4" stroke="#c9a96e" stroke-width="0.5" fill="none" opacity="0.4"/>
+        <circle cx="4" cy="4" r="3" fill="#c9a96e" opacity="0.7"/>
+        <circle cx="36" cy="4" r="1.5" fill="#c9a96e" opacity="0.5"/>
+        <circle cx="4" cy="36" r="1.5" fill="#c9a96e" opacity="0.5"/>
+      </svg>
+    </div>
+    <div class="corner-ornament br">
+      <svg viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 68 Q4 4 68 4" stroke="#c9a96e" stroke-width="0.8" fill="none" opacity="0.6"/>
+        <path d="M4 48 Q4 4 48 4" stroke="#c9a96e" stroke-width="0.5" fill="none" opacity="0.4"/>
+        <circle cx="4" cy="4" r="3" fill="#c9a96e" opacity="0.7"/>
+        <circle cx="36" cy="4" r="1.5" fill="#c9a96e" opacity="0.5"/>
+        <circle cx="4" cy="36" r="1.5" fill="#c9a96e" opacity="0.5"/>
+      </svg>
+    </div>
+
+    <div class="cover-bismillah fade-up">﷽</div>
+    <div class="cover-label fade-up delay-1">— Undangan Pernikahan —</div>
+
+    <div class="cover-names fade-up delay-1">
+      Iqbal<br><span>&</span><br>Ina
+    </div>
+
+    <!-- Gold line under names -->
+    <div class="cover-names-ornament fade-up delay-1">
+      <div class="cover-names-ornament-diamond"></div>
+    </div>
+
+    <div class="cover-date-badge fade-up delay-2">21 · 08 · 2026</div>
+
     <div class="cover-to fade-up delay-2">Kepada Yth. Bpk/Ibu/Saudara/i</div>
     <div class="cover-guest fade-up delay-2">Nama Tamu</div>
-    <div style="font-size:11px;color:var(--text);opacity:.5;margin-top:4px;" class="fade-up delay-2">di Tempat</div>
-    <a href="#" class="btn-open fade-up delay-3" onclick="openInvitation(event)">Buka Undangan</a>
-    <div class="cover-leaf-bottom"></div>
+    <div style="font-size:11px;color:var(--text);opacity:.45;margin-top:4px;letter-spacing:1px;" class="fade-up delay-2">di Tempat</div>
+
+    <a href="#" class="btn-open fade-up delay-3" onclick="openInvitation(event)">
+      Buka Undangan
+    </a>
   </div>
 
   <!-- ===================== LIGHTBOX ===================== -->
@@ -26,6 +83,33 @@
     <span class="lightbox-close">×</span>
     <img src="" id="lightbox-img" alt="">
   </div>
+
+  <!-- ===================== MUSIC PLAYER PILL ===================== -->
+  <!-- Always inside the viewport — never escapes the frame -->
+  <div class="music-player" id="music-player">
+    <div class="music-pill" id="music-pill">
+      <button id="music-control" onclick="toggleMusic(event)" aria-label="Play/Pause Music">
+        <div class="music-ring"></div>
+        <span id="music-icon">♪</span>
+      </button>
+      <div class="music-info">
+        <div class="music-song-title">THANK YOU 4 LOVIN' ME</div>
+        <div class="music-song-artist">Paul Partohap</div>
+      </div>
+      <div class="music-wave">
+        <div class="music-bar"></div>
+        <div class="music-bar"></div>
+        <div class="music-bar"></div>
+        <div class="music-bar"></div>
+        <div class="music-bar"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Audio element -->
+  <audio id="wedding-audio" loop>
+    <source src="media/Paul Partohap - THANK YOU 4 LOVIN' ME Lyric Video (mp3cut.net).m4a" type="audio/mp4">
+  </audio>
 
   <!-- ===================== MAIN CONTENT ===================== -->
   <div id="main-content">
@@ -39,26 +123,51 @@
       <a href="#ucapan">Ucapan</a>
     </nav>
 
-    <!-- HERO -->
-    <section style="padding:80px 20px 40px;">
+    <!-- ===== HERO ===== -->
+    <section style="padding:80px 20px 50px; position:relative; overflow:hidden;">
+
+      <!-- Subtle background floral SVG -->
+      <svg style="position:absolute;top:0;right:-20px;width:180px;opacity:0.06;pointer-events:none;" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="100" cy="100" r="80" stroke="#c9a96e" stroke-width="0.8" fill="none"/>
+        <circle cx="100" cy="100" r="60" stroke="#c9a96e" stroke-width="0.5" fill="none"/>
+        <circle cx="100" cy="100" r="40" stroke="#c9a96e" stroke-width="0.4" fill="none"/>
+        <path d="M100 20 L105 95 L180 100 L105 105 L100 180 L95 105 L20 100 L95 95 Z" fill="#c9a96e"/>
+      </svg>
+
       <div class="section-label">We're Getting Married</div>
       <div class="section-title">Iqbal &amp; Ina</div>
-      <div class="divider-leaf"></div>
-      <div class="reveal">
-        <p style="font-size:14px;opacity:.7;line-height:1.9;">
-            Dengan memohon rahmat dan ridho Allah SWT, kami bermaksud mengundang Bapak/Ibu/Saudara/i ke acara pernikahan kami:
-        </p>
-        <div class="quran-quote">
-            <p>"Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang. Sungguh, pada yang demikian itu benar-benar terdapat tanda-tanda (kebesaran Allah) bagi kaum yang berpikir."</p>
-        <div class="quran-surah">( QS. Ar-Rum: 21 )</div>
+
+      <div class="divider-leaf">
+        <div class="divider-leaf-center">
+          <span>✦</span>
+          <span style="font-size:14px;">❧</span>
+          <span>✦</span>
         </div>
-    </div>
+      </div>
+
+      <div class="reveal d2">
+        <p style="font-size:14px;opacity:.72;line-height:2;max-width:520px;margin:0 auto 0;">
+          Dengan memohon rahmat dan ridho Allah SWT, kami bermaksud mengundang<br>Bapak/Ibu/Saudara/i ke acara pernikahan kami:
+        </p>
+      </div>
+
+      <div class="quran-quote reveal d3">
+        <p>"Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang."</p>
+        <div class="quran-surah">— QS. Ar-Rum: 21 —</div>
+      </div>
     </section>
 
-    <!-- COUNTDOWN -->
+    <!-- ===== COUNTDOWN ===== -->
     <div id="countdown-section">
       <div class="section-label reveal">Save The Date</div>
-      <div class="section-title reveal d1" style="font-size:28px;">Jumat, 21 Agustus 2026</div>
+      <div class="section-title reveal d1" style="font-size:clamp(22px,5vw,32px);">Jumat, 21 Agustus 2026</div>
+
+      <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin:12px auto 32px;opacity:0.6;" class="reveal d2">
+        <span style="width:40px;height:1px;background:rgba(201,213,184,0.6);display:block;"></span>
+        <span style="font-size:10px;letter-spacing:3px;color:var(--gold-light);">JOMBANG · JAWA TIMUR</span>
+        <span style="width:40px;height:1px;background:rgba(201,213,184,0.6);display:block;"></span>
+      </div>
+
       <div class="countdown-boxes" id="countdown-boxes">
         <div class="countdown-box">
           <div class="countdown-number" id="cd-days">00</div>
@@ -76,27 +185,44 @@
           <div class="countdown-number" id="cd-seconds">00</div>
           <div class="countdown-label">Detik</div>
         </div>
-      
-      <div class="reveal d5" style="margin-top: 40px;">
-        <a href="#" id="btn-google-calendar" class="btn-event btn-calendar" target="_blank" style="padding: 12px 30px; background: var(--rose); border: none;">
-          🗓️ Simpan ke Google Calendar
-        </a>
       </div>
+
+      <div class="reveal d5" style="margin-top:36px;">
+        <a href="#" id="btn-google-calendar" target="_blank"
+           style="display:inline-flex;align-items:center;gap:8px;padding:12px 32px;border-radius:40px;background:rgba(255,255,255,0.12);border:1px solid rgba(201,213,184,0.4);color:#fff;text-decoration:none;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;transition:background 0.3s,transform 0.3s;"
+           onmouseover="this.style.background='rgba(255,255,255,0.22)';this.style.transform='translateY(-2px)';"
+           onmouseout="this.style.background='rgba(255,255,255,0.12)';this.style.transform='';">
+          🗓️ Simpan ke Kalender
+        </a>
       </div>
     </div>
 
-    <!-- MEMPELAI -->
-    <section id="bridegroom">
+    <!-- ===== MEMPELAI ===== -->
+    <section id="bridegroom" style="position:relative;overflow:hidden;">
+
+      <!-- Decorative background ring -->
+      <svg style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:340px;opacity:0.04;pointer-events:none;" viewBox="0 0 340 340">
+        <circle cx="170" cy="170" r="165" stroke="#c9a96e" stroke-width="1" fill="none" stroke-dasharray="6 4"/>
+        <circle cx="170" cy="170" r="140" stroke="#c9a96e" stroke-width="0.6" fill="none"/>
+      </svg>
+
       <div class="section-label">Mempelai</div>
       <div class="section-title">Kami Yang Berbahagia</div>
-      <div class="divider-leaf"></div>
-      <p class="reveal d2" style="font-size:13px;opacity:.7;line-height:1.9;margin-bottom:24px;">
-        Dengan undangan ini, kami bermaksud mengundang Bapak/Ibu/Saudara/i untuk hadir dalam acara pernikahan kami.
+      <div class="divider-leaf">
+        <div class="divider-leaf-center">
+          <span>✦</span><span style="font-size:14px;">❧</span><span>✦</span>
+        </div>
+      </div>
+      <p class="reveal d2" style="font-size:13px;opacity:.7;line-height:1.9;margin-bottom:28px;">
+        Dengan undangan ini, kami bermaksud mengundang Bapak/Ibu/Saudara/i<br>
+        untuk hadir dalam acara pernikahan kami.
       </p>
+
       <div class="couple-grid">
-        <!-- couple-card & couple-amp get reveal classes via JS -->
         <div class="couple-card">
-          <div class="couple-photo-placeholder">🤵</div>
+          <div class="couple-photo-wrapper">
+            <div class="couple-photo-placeholder">🤵</div>
+          </div>
           <div class="couple-name">Iqbal Maulana S.IP.</div>
           <div class="couple-parents">
             Putra dari<br>
@@ -104,165 +230,226 @@
             &amp; Ibu Nurlisa Wahyu Darwanti<br>
             <span style="font-size:11px;color:var(--rose);">Perum Denanyar Indah, Jombang</span>
           </div>
-              <div class="couple-item reveal">
-                <a href="https://instagram.com/ibl.mlna" target="_blank" class="btn-ig">
-                  <img src="https://upload.wikimedia.org/wikipedia/commons/e/e7/Instagram_logo_2016.svg" width="12" height="12" alt="IG"> @ibl.mlna
-                </a>
-              </div>   
+          <div class="couple-item reveal">
+            <a href="https://instagram.com/ibl.mlna" target="_blank" class="btn-ig">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/e/e7/Instagram_logo_2016.svg" width="12" height="12" alt="IG"> @ibl.mlna
+            </a>
+          </div>
         </div>
+
         <div class="couple-amp">&amp;</div>
+
         <div class="couple-card">
-          <div class="couple-photo-placeholder">👰</div>
+          <div class="couple-photo-wrapper">
+            <div class="couple-photo-placeholder">👰</div>
+          </div>
           <div class="couple-name">Ina Nikmatul Chasanah S.Ak.</div>
           <div class="couple-parents">
             Putri dari<br>
             Bapak Mukti Ali<br>
             &amp; Ibu Nur Chomsatun<br>
-            <span style="font-size:11px;color:var(--rose);">Ds.Grogol, Diwek, Jombang</span>
+            <span style="font-size:11px;color:var(--rose);">Ds. Grogol, Diwek, Jombang</span>
           </div>
-            <div class="couple-item reveal">
-              <a href="https://instagram.com/inanikma_" target="_blank" class="btn-ig">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/e/e7/Instagram_logo_2016.svg" width="12" height="12" alt="IG"> @inanikma_
-              </a>
-            </div>
+          <div class="couple-item reveal">
+            <a href="https://instagram.com/inanikma_" target="_blank" class="btn-ig">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/e/e7/Instagram_logo_2016.svg" width="12" height="12" alt="IG"> @inanikma_
+            </a>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- EVENT -->
+    <!-- ===== EVENT ===== -->
     <section id="event">
       <div class="section-label">Acara</div>
       <div class="section-title">Waktu &amp; Tempat</div>
-      <div class="divider-leaf"></div>
+      <div class="divider-leaf">
+        <div class="divider-leaf-center">
+          <span>✦</span><span style="font-size:14px;">❧</span><span>✦</span>
+        </div>
+      </div>
 
-      <!-- event-card gets reveal-left/right via JS -->
       <div class="event-card">
+        <span class="event-icon">🕌</span>
         <div class="event-title">Akad Nikah</div>
         <div class="event-date">Jumat, 21 Agustus 2026</div>
         <div class="event-time">Pukul 08:00 – 09:00 WIB</div>
         <div class="event-venue">Rumah Mempelai Wanita</div>
-        <div class="event-address">Dsn. Grogol RT/RW 006/006 Ds. Grogol Kec. Diwek Kab. Jombang</div>
-        <a href="https://maps.app.goo.gl/fPWYK652SdjCLdi89" class="btn-event btn-calendar">Lihat Peta</a>
+        <div class="event-address">Dsn. Grogol RT/RW 006/006<br>Ds. Grogol Kec. Diwek Kab. Jombang</div>
+        <a href="https://maps.app.goo.gl/fPWYK652SdjCLdi89" target="_blank" class="btn-event btn-calendar">
+          📍 Lihat Peta
+        </a>
       </div>
 
-      <div class="reveal" style="width:40px;height:2px;background:var(--blush);margin:0 auto;"></div>
+      <!-- Gold separator -->
+      <div class="gold-rule reveal">
+        <div class="gold-rule-diamond"></div>
+        <div class="gold-rule-diamond" style="width:5px;height:5px;opacity:0.5;"></div>
+        <div class="gold-rule-diamond"></div>
+      </div>
 
       <div class="event-card">
+        <span class="event-icon">🎊</span>
         <div class="event-title">Resepsi</div>
         <div class="event-date">Jumat, 21 Agustus 2026</div>
         <div class="event-time">Pukul 09:00 – Selesai WIB</div>
         <div class="event-venue">Rumah Mempelai Wanita</div>
-        <div class="event-address">Dsn. Grogol RT/RW 006/006 Ds. Grogol Kec. Diwek Kab. Jombang</div>
-        <a href="https://maps.app.goo.gl/fPWYK652SdjCLdi89" class="btn-event btn-calendar">Lihat Peta</a>
+        <div class="event-address">Dsn. Grogol RT/RW 006/006<br>Ds. Grogol Kec. Diwek Kab. Jombang</div>
+        <a href="https://maps.app.goo.gl/fPWYK652SdjCLdi89" target="_blank" class="btn-event btn-calendar">
+          📍 Lihat Peta
+        </a>
       </div>
     </section>
 
-    <!-- Gift -->
-     <section id="gift">
-  <div class="section-label reveal">Wedding Gift</div>
-  <div class="section-title reveal d1">Tanda Kasih</div>
-  <div class="divider-leaf"></div>
-  <p class="reveal d2" style="font-size:13px;opacity:.7;line-height:1.9;margin-bottom:30px;">
-    Do'a restu keluarga, sahabat, serta rekan-rekan semua di pernikahan kami sudah sangat cukup sebagai hadiah, tetapi jika memberi merupakan tanda kasih, kami dengan senang hati menerimanya dan tentunya semakin melengkapi kebahagiaan kami.
-  </p>
+    <!-- ===== GIFT ===== -->
+    <section id="gift" style="position:relative;overflow:hidden;">
 
-  <div class="gift-container">
-    <div class="gift-card reveal">
-      <div class="gift-icon">🎁</div>
-      
-      <div class="form-group" style="text-align: left;">
-        <select id="gift-selector" onchange="updateGiftDisplay()" class="gift-select">
-          <option value="bri">Bank BRI</option>
-          <option value="seabank">SeaBank</option>
-          <option value="ewallet">E-Wallet (GoPay/OVO/DANA)</option>
-          <option value="kado">Kirim Kado (Alamat)</option>
-        </select>
+      <!-- Watermark ornament -->
+      <svg style="position:absolute;bottom:-10px;right:-20px;width:160px;opacity:0.05;pointer-events:none;" viewBox="0 0 160 160">
+        <path d="M80 10 L150 80 L80 150 L10 80 Z" stroke="#c9a96e" stroke-width="1" fill="none"/>
+        <path d="M80 30 L130 80 L80 130 L30 80 Z" stroke="#c9a96e" stroke-width="0.6" fill="none"/>
+        <circle cx="80" cy="80" r="15" stroke="#c9a96e" stroke-width="0.5" fill="none"/>
+      </svg>
+
+      <div class="section-label">Wedding Gift</div>
+      <div class="section-title">Tanda Kasih</div>
+      <div class="divider-leaf">
+        <div class="divider-leaf-center">
+          <span>✦</span><span style="font-size:14px;">❧</span><span>✦</span>
+        </div>
       </div>
-
-      <div id="gift-detail-box" class="gift-detail-animate">
-        <div class="bank-name" id="display-bank">BRI</div>
-        <div class="account-number" id="display-number">3638 0103 6696 532</div>
-        <div class="account-holder" id="display-holder">a.n. INA NIKMATUL CHASANAH</div>
-        <button class="btn-copy" id="btn-copy-gift" onclick="copyGiftText()">Salin Nomor</button>
-      </div>
-    </div>
-  </div>
-</section>
-
-    <!-- GALLERY -->
-    <section id="galery">
-  <div class="section-label">Gallery</div>
-  <div class="section-title">Momen Bahagia</div>
-  <div class="divider-leaf"></div>
-
-  <div class="gallery-grid">
-    <div class="gallery-item reveal">
-      <img src="https://cdn.kadio.id/upload/invitation/1720595030_Rectangle-12.png" alt="Gallery 1">
-    </div>
-    <div class="gallery-item reveal">
-      <img src="https://cdn.kadio.id/upload/invitation/1720595030_Rectangle-11.png" alt="Gallery 2">
-    </div>
-  </div>
-</section>
-
-    <!-- UCAPAN -->
-    <section id="ucapan">
-  <div class="section-label">Doa & Ucapan</div>
-  <div class="section-title">Pesan untuk Mempelai</div>
-  <div class="divider-leaf"></div>
-
-  <div class="ucapan-form">
-    <div class="form-group">
-      <label>Nama</label>
-      <input type="text" id="ucapan-nama" placeholder="Nama Anda">
-    </div>
-
-    <div class="form-group">
-      <label>Konfirmasi Kehadiran</label>
-      <div class="status-hadir-container">
-        <button type="button" class="btn-status" onclick="setStatusHadir(this, 'Hadir')">Hadir</button>
-        <button type="button" class="btn-status" onclick="setStatusHadir(this, 'Tidak Hadir')">Tidak Hadir</button>
-        <button type="button" class="btn-status" onclick="setStatusHadir(this, 'Ragu-ragu')">Ragu-ragu</button>
-      </div>
-      <input type="hidden" id="ucapan-status" value="">
-    </div>
-
-    <div class="form-group">
-      <label>Pesan untuk Mempelai</label>
-      <textarea id="ucapan-pesan" rows="4" placeholder="Tuliskan doa dan ucapan Anda..."></textarea>
-    </div>
-    <button class="btn-submit" onclick="kirimUcapan()">Kirim Ucapan</button>
-  </div>
-
-  <div id="messages-list" class="messages-list" style="margin-top: 30px; max-height: 500px; overflow-y: auto;">
-</div>
-
-<div id="pagination-controls" style="display: flex; justify-content: center; gap: 15px; margin-top: 20px;">
-  <button id="prev-page" class="btn-copy" onclick="changePage(-1)" style="display:none;">&laquo; Sebelumnya</button>
-  <span id="page-info" style="font-size: 13px; align-self: center; opacity: 0.7;"></span>
-  <button id="next-page" class="btn-copy" onclick="changePage(1)" style="display:none;">Selanjutnya &raquo;</button>
-</div>
-</section>
-
-    <!-- FOOTER -->
-    <footer>
-      <div class="footer-label">Salam</div>
-      <div class="footer-names">Iqbal &amp; Ina</div>
-      <p class="reveal d3" style="font-size:13px;color:rgba(255,255,255,0.6);margin-top:16px;line-height:1.8;">
-        Atas doa &amp; ucapan Bapak/Ibu/Saudara/i,<br>kami mengucapkan terima kasih.
+      <p class="reveal d2" style="font-size:13px;opacity:.7;line-height:1.9;margin-bottom:28px;">
+        Do'a restu keluarga dan sahabat adalah hadiah terbesar bagi kami.<br>
+        Namun jika memberi adalah tanda kasih, kami dengan tulus menerimanya.
       </p>
-      <div class="footer-credit reveal d4">Made with ❤️</div>
-    </footer>
+
+      <div class="gift-container">
+        <div class="gift-card reveal">
+          <div class="gift-icon">🎁</div>
+          <div class="form-group" style="text-align:left;">
+            <label>Pilih Metode</label>
+            <select id="gift-selector" onchange="updateGiftDisplay()" class="gift-select">
+              <option value="bri">🏦 Bank BRI</option>
+              <option value="seabank">💙 SeaBank</option>
+              <option value="ewallet">📱 E-Wallet (GoPay / OVO / DANA)</option>
+              <option value="kado">📦 Kirim Kado (Alamat)</option>
+            </select>
+          </div>
+          <div id="gift-detail-box" class="gift-detail-animate">
+            <div class="bank-name" id="display-bank">Bank BRI</div>
+            <div class="account-number" id="display-number">3638 0103 6696 532</div>
+            <div class="account-holder" id="display-holder">a.n. INA NIKMATUL CHASANAH</div>
+            <button class="btn-copy" id="btn-copy-gift" onclick="copyGiftText()">Salin Nomor</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== GALLERY ===== -->
+    <section id="galery">
+      <div class="section-label">Gallery</div>
+      <div class="section-title">Momen Bahagia</div>
+      <div class="divider-leaf">
+        <div class="divider-leaf-center">
+          <span>✦</span><span style="font-size:14px;">❧</span><span>✦</span>
+        </div>
+      </div>
+
+      <div class="gallery-grid">
+        <div class="gallery-item" onclick="openLightbox('https://cdn.kadio.id/upload/invitation/1720595030_Rectangle-12.png')">
+          <img src="https://cdn.kadio.id/upload/invitation/1720595030_Rectangle-12.png" alt="Gallery 1"
+               onerror="this.parentElement.innerHTML='💐'">
+        </div>
+        <div class="gallery-item" onclick="openLightbox('https://cdn.kadio.id/upload/invitation/1720595030_Rectangle-11.png')">
+          <img src="https://cdn.kadio.id/upload/invitation/1720595030_Rectangle-11.png" alt="Gallery 2"
+               onerror="this.parentElement.innerHTML='🌸'">
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== UCAPAN ===== -->
+    <section id="ucapan" style="position:relative;overflow:hidden;">
+
+      <!-- Decorative dots -->
+      <svg style="position:absolute;top:20px;left:-10px;width:120px;opacity:0.06;pointer-events:none;" viewBox="0 0 120 120">
+        <circle cx="20" cy="20" r="3" fill="#c9a96e"/>
+        <circle cx="40" cy="20" r="2" fill="#c9a96e"/>
+        <circle cx="60" cy="20" r="1.5" fill="#c9a96e"/>
+        <circle cx="20" cy="40" r="2" fill="#c9a96e"/>
+        <circle cx="40" cy="40" r="3" fill="#c9a96e"/>
+        <circle cx="60" cy="40" r="2" fill="#c9a96e"/>
+        <circle cx="20" cy="60" r="1.5" fill="#c9a96e"/>
+        <circle cx="40" cy="60" r="2" fill="#c9a96e"/>
+        <circle cx="60" cy="60" r="3" fill="#c9a96e"/>
+      </svg>
+
+      <div class="section-label">Doa &amp; Ucapan</div>
+      <div class="section-title">Pesan untuk Mempelai</div>
+      <div class="divider-leaf">
+        <div class="divider-leaf-center">
+          <span>✦</span><span style="font-size:14px;">❧</span><span>✦</span>
+        </div>
+      </div>
+
+      <div class="ucapan-form reveal">
+        <div class="form-group">
+          <label>Nama</label>
+          <input type="text" id="ucapan-nama" placeholder="Nama Anda">
+        </div>
+        <div class="form-group">
+          <label>Konfirmasi Kehadiran</label>
+          <div class="status-hadir-container">
+            <button type="button" class="btn-status" onclick="setStatusHadir(this,'Hadir')">✓ Hadir</button>
+            <button type="button" class="btn-status" onclick="setStatusHadir(this,'Tidak Hadir')">✕ Tidak Hadir</button>
+            <button type="button" class="btn-status" onclick="setStatusHadir(this,'Ragu-ragu')">? Ragu-ragu</button>
+          </div>
+          <input type="hidden" id="ucapan-status" value="">
+        </div>
+        <div class="form-group">
+          <label>Pesan untuk Mempelai</label>
+          <textarea id="ucapan-pesan" rows="4" placeholder="Tuliskan doa dan ucapan Anda..."></textarea>
+        </div>
+        <button class="btn-submit" onclick="kirimUcapan()">Kirim Ucapan</button>
+      </div>
+
+      <div id="messages-list" class="messages-list" style="max-height:520px;overflow-y:auto;"></div>
+
+      <div id="pagination-controls" style="display:flex;justify-content:center;gap:15px;margin-top:20px;">
+        <button id="prev-page" class="btn-copy" onclick="changePage(-1)" style="display:none;">&laquo; Sebelumnya</button>
+        <span id="page-info" style="font-size:13px;align-self:center;opacity:0.7;"></span>
+        <button id="next-page" class="btn-copy" onclick="changePage(1)" style="display:none;">Selanjutnya &raquo;</button>
+      </div>
+    </section>
 
   </div><!-- end main-content -->
-  <audio id="wedding-audio" loop>
-      <source src="media/Barasuara - Terbuang Dalam Waktu Official Lyric Video (mp3cut.net).m4a" type="audio/mp4">
-      Your browser does not support the audio element.
-    </audio>
 
-    <button id="music-control" class="music-control" onclick="toggleMusic(event)">
-      <span id="music-icon">🎵</span>
-    </button>
+  <!-- ===== FOOTER ===== -->
+  <footer id="site-footer" style="display:none;">
+    <div class="footer-bismillah">﷽</div>
+
+    <!-- Gold divider -->
+    <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:20px;">
+      <span style="width:60px;height:1px;background:linear-gradient(90deg,transparent,rgba(201,213,184,0.5));display:block;"></span>
+      <span style="font-size:12px;color:rgba(201,213,184,0.6);">✦</span>
+      <span style="width:60px;height:1px;background:linear-gradient(90deg,rgba(201,213,184,0.5),transparent);display:block;"></span>
+    </div>
+
+    <div class="footer-label">Salam Bahagia dari</div>
+    <div class="footer-names">Iqbal &amp; Ina</div>
+    <div class="footer-tagline">21 · 08 · 2026</div>
+
+    <!-- Gold divider -->
+    <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin:24px auto 16px;">
+      <span style="width:50px;height:1px;background:linear-gradient(90deg,transparent,rgba(201,213,184,0.4));display:block;"></span>
+      <span style="font-size:10px;color:rgba(201,213,184,0.5);">✦ ✦ ✦</span>
+      <span style="width:50px;height:1px;background:linear-gradient(90deg,rgba(201,213,184,0.4),transparent);display:block;"></span>
+    </div>
+
+    <p style="font-size:13px;color:rgba(255,255,255,0.55);line-height:1.9;">
+      Atas doa &amp; ucapan Bapak/Ibu/Saudara/i,<br>kami mengucapkan terima kasih.
+    </p>
+    <div class="footer-credit">Made with ❤️ · 2026</div>
+  </footer>
 
   <script src="js/script.js"></script>
 </body>

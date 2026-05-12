@@ -1,94 +1,237 @@
 /* ============================================================
-   OPEN INVITATION
+   GOOGLE SHEETS ENDPOINT
    ============================================================ */
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby5XWkYAXiaI4nNMizOQ7HkCeuSiHfrQu3h0AVvsFyawPIxxoLFmFTbML53MukPcbL8/exec";
+
+/* ============================================================
+   OPEN INVITATION
+   ============================================================ */
 function openInvitation(e) {
   e.preventDefault();
 
-  // Jalankan Musik
-  const audio = document.getElementById('wedding-audio');
-  const musicBtn = document.getElementById('music-control');
-  
-  if (audio) {
-    audio.play().catch(error => console.log("Autoplay dicegah browser"));
-    musicBtn.style.display = 'flex';
-    musicBtn.classList.add('playing');
-  }
-
-  // cover fade out
+  // Cover fade out
   const cover = document.getElementById('cover');
-  cover.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+  cover.style.transition = 'opacity 0.7s ease, transform 0.7s ease';
   cover.style.opacity    = '0';
-  cover.style.transform  = 'scale(1.04)';
+  cover.style.transform  = 'scale(1.05)';
 
   setTimeout(() => {
     cover.style.display = 'none';
+
     const main = document.getElementById('main-content');
     main.classList.add('open');
+
+    const footer = document.getElementById('site-footer');
+    if (footer) footer.style.display = 'block';
+
+    // Show music player pill
+    showMusicPlayer();
+
+    // Start music with FADE IN effect
+    musicFadeIn();
 
     requestAnimationFrame(() => {
       startCountdown();
       initScrollReveal();
-      spawnPetals();
-      initCalendarLink(); // Panggil fungsi kalender di sini
-      setTimeout(initActiveNav, 700); // Panggil nav highlight di sini
+      spawnMainPetals();
+      initCalendarLink();
+      setTimeout(initActiveNav, 700);
     });
-  }, 600);
+  }, 700);
 }
 
 /* ============================================================
-   FLOATING PETALS (cover only – spawned on load)
+   PETALS — cover + main content background ambiance
    ============================================================ */
-function spawnPetals() {
-  const container = document.getElementById('cover') || document.body;
-  // remove existing petals first
-  document.querySelectorAll('.petal').forEach(p => p.remove());
-
-  const count = 14;
+function spawnPetals(container, count) {
   for (let i = 0; i < count; i++) {
     const p = document.createElement('div');
     p.className = 'petal';
-    const size  = 7 + Math.random() * 8;
-    const dur   = 6 + Math.random() * 8;
-    const delay = Math.random() * 10;
+    const size  = 7 + Math.random() * 9;
+    const dur   = 7 + Math.random() * 9;
+    const delay = Math.random() * 12;
     const left  = Math.random() * 100;
     p.style.cssText = `
       left:${left}%;
-      width:${size}px; height:${size * 1.4}px;
+      width:${size}px;
+      height:${size * 1.45}px;
       animation-duration:${dur}s;
       animation-delay:${delay}s;
     `;
     container.appendChild(p);
   }
 }
-window.addEventListener('DOMContentLoaded', spawnPetals);
+
+function spawnMainPetals() {
+  const main = document.getElementById('main-content');
+  if (main) spawnPetals(main, 10);
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  const cover = document.getElementById('cover');
+  if (cover) spawnPetals(cover, 16);
+  gantiNamaTamu();
+  loadMessages();
+});
 
 /* ============================================================
-   COUNTDOWN  (with digit-flip animation)
+   PREMIUM MUSIC PLAYER — FADE IN / FADE OUT
+   ============================================================ */
+const FADE_DURATION = 2200;   // ms — how long the full fade takes
+let   fadeInterval  = null;
+
+function musicFadeIn() {
+  const audio = document.getElementById('wedding-audio');
+  if (!audio) return;
+
+  clearInterval(fadeInterval);
+  audio.volume = 0;
+
+  audio.play().then(() => {
+    const target = 0.72;
+    const steps  = 60;
+    const step   = target / steps;
+    let   vol    = 0;
+
+    fadeInterval = setInterval(() => {
+      vol = Math.min(vol + step, target);
+      audio.volume = parseFloat(vol.toFixed(4));
+      if (vol >= target) clearInterval(fadeInterval);
+    }, FADE_DURATION / steps);
+
+    setPillState(true);
+  }).catch(err => {
+    console.log('Autoplay blocked — waiting for interaction:', err);
+    // Will play on first user interaction
+    document.addEventListener('click', function firstClick() {
+      musicFadeIn();
+      document.removeEventListener('click', firstClick);
+    }, { once: true });
+  });
+}
+
+function musicFadeOut(callback) {
+  const audio = document.getElementById('wedding-audio');
+  if (!audio || audio.paused) { if (callback) callback(); return; }
+
+  clearInterval(fadeInterval);
+  const startVol = audio.volume;
+  const steps    = 50;
+  const step     = startVol / steps;
+  let   vol      = startVol;
+
+  fadeInterval = setInterval(() => {
+    vol = Math.max(vol - step, 0);
+    audio.volume = parseFloat(vol.toFixed(4));
+    if (vol <= 0) {
+      clearInterval(fadeInterval);
+      audio.pause();
+      if (callback) callback();
+    }
+  }, FADE_DURATION / steps);
+
+  setPillState(false);
+}
+
+/* Toggle called by the button */
+function toggleMusic(e) {
+  if (e) e.stopPropagation();
+  const audio = document.getElementById('wedding-audio');
+  if (!audio) return;
+
+  // Ripple
+  const btn = document.getElementById('music-control');
+  btn.classList.remove('ripple');
+  void btn.offsetWidth;
+  btn.classList.add('ripple');
+
+  if (audio.paused) {
+    musicFadeIn();
+  } else {
+    musicFadeOut();
+  }
+}
+
+/* Update pill UI for playing/paused state */
+function setPillState(playing) {
+  const icon = document.getElementById('music-icon');
+  const pill = document.querySelector('.music-pill');
+
+  if (playing) {
+    if (icon) icon.textContent = '♪';
+    pill?.classList.add('playing');
+  } else {
+    if (icon) icon.textContent = '𝄽';
+    pill?.classList.remove('playing');
+  }
+}
+
+/* Show the pill with a slide-up entrance */
+function showMusicPlayer() {
+  const player = document.querySelector('.music-player');
+  if (!player) return;
+  player.classList.add('visible');
+  player.style.transform = 'translateY(80px)';
+  player.style.opacity   = '0';
+  player.style.transition = 'transform 0.6s cubic-bezier(.34,1.3,.64,1), opacity 0.5s ease';
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      player.style.transform = 'translateY(0)';
+      player.style.opacity   = '1';
+    });
+  });
+
+  // Auto-expand pill for 4s then collapse
+  setTimeout(() => expandPill(), 400);
+  setTimeout(() => collapsePill(), 4500);
+}
+
+function expandPill() {
+  document.querySelector('.music-pill')?.classList.add('expanded');
+}
+function collapsePill() {
+  document.querySelector('.music-pill')?.classList.remove('expanded');
+}
+
+/* Hover expand/collapse */
+document.addEventListener('DOMContentLoaded', () => {
+  const pill = document.querySelector('.music-pill');
+  if (!pill) return;
+  pill.addEventListener('mouseenter', expandPill);
+  pill.addEventListener('mouseleave', () => setTimeout(collapsePill, 800));
+  // Touch support
+  pill.addEventListener('touchstart', () => {
+    expandPill();
+    setTimeout(collapsePill, 3500);
+  }, { passive: true });
+});
+
+/* ============================================================
+   COUNTDOWN — with digit-flip animation
    ============================================================ */
 function startCountdown() {
-  const target = new Date('2026-08-21T08:00:00');
-
-  const ids = ['cd-days','cd-hours','cd-minutes','cd-seconds'];
-  const prev = { days: null, hours: null, minutes: null, seconds: null };
+  const target = new Date('2026-08-21T08:00:00+07:00');
+  const prev   = { days: null, hours: null, minutes: null, seconds: null };
 
   function setVal(id, key, val) {
     const str = String(val).padStart(2, '0');
     const el  = document.getElementById(id);
-    if (!el) return;
-    if (prev[key] !== str) {
-      el.classList.remove('flip');
-      void el.offsetWidth;          // reflow to restart animation
-      el.classList.add('flip');
-      el.textContent = str;
-      prev[key] = str;
-    }
+    if (!el || prev[key] === str) return;
+    el.classList.remove('flip');
+    void el.offsetWidth;
+    el.classList.add('flip');
+    el.textContent = str;
+    prev[key] = str;
   }
 
   function update() {
     const diff = target - new Date();
     if (diff <= 0) {
-      ids.forEach(id => { const el = document.getElementById(id); if(el) el.textContent='00'; });
+      ['cd-days','cd-hours','cd-minutes','cd-seconds'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = '00';
+      });
       return;
     }
     setVal('cd-days',    'days',    Math.floor(diff / 86400000));
@@ -101,22 +244,20 @@ function startCountdown() {
   setInterval(update, 1000);
 }
 
+/* ============================================================
+   GOOGLE CALENDAR LINK
+   ============================================================ */
 function initCalendarLink() {
-  const eventTitle = "Pernikahan Iqbal & Ina";
-  const eventDetails = "Mohon doa restu dan kehadirannya dalam acara pernikahan kami.";
-  const eventLocation = "Dsn. Grogol RT/RW 006/006 Ds. Grogol Kec. Diwek Kab. Jombang";
-  
-  // Format tanggal untuk Google Calendar (YYYYMMDDTHHMMSSZ)
-  // Akad dimulai jam 08:00 WIB (UTC+7), maka dalam UTC adalah 01:00
-  const startDate = "20260821T010000Z"; 
-  const endDate = "20260821T100000Z"; // Asumsi selesai jam 17:00 WIB (10:00 UTC)
+  const title    = "Pernikahan Iqbal & Ina";
+  const details  = "Mohon doa restu dan kehadirannya dalam acara pernikahan kami.";
+  const location = "Dsn. Grogol RT/RW 006/006 Ds. Grogol Kec. Diwek Kab. Jombang";
+  const start    = "20260821T010000Z";
+  const end      = "20260821T100000Z";
 
-  const calendarUrl = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(eventTitle)}&dates=${startDate}/${endDate}&details=${encodeURIComponent(eventDetails)}&location=${encodeURIComponent(eventLocation)}&sf=true&output=xml`;
+  const url = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${start}/${end}&details=${encodeURIComponent(details)}&location=${encodeURIComponent(location)}&sf=true&output=xml`;
 
-  const calendarBtn = document.getElementById('btn-google-calendar');
-  if (calendarBtn) {
-    calendarBtn.href = calendarUrl;
-  }
+  const btn = document.getElementById('btn-google-calendar');
+  if (btn) btn.href = url;
 }
 
 /* ============================================================
@@ -130,45 +271,16 @@ function initScrollReveal() {
       if (!entry.isIntersecting) return;
       const el = entry.target;
 
-      // generic reveal classes
-      if (el.classList.contains('reveal') ||
-          el.classList.contains('reveal-left') ||
-          el.classList.contains('reveal-right') ||
-          el.classList.contains('reveal-scale')) {
+      if (['reveal','reveal-left','reveal-right','reveal-scale'].some(c => el.classList.contains(c))) {
         el.classList.add('revealed');
       }
+      if (el.classList.contains('story-dot'))      el.classList.add('revealed');
+      if (el.classList.contains('story-timeline')) setTimeout(() => el.classList.add('line-grow'), 200);
+      if (el.classList.contains('gallery-item'))   el.classList.add('revealed');
+      if (el.classList.contains('divider-leaf'))   el.classList.add('revealed');
+      if (el.classList.contains('event-card'))     el.classList.add('revealed');
+      if (el.classList.contains('message-item'))   el.classList.add('revealed');
 
-      // special: story dots pop in
-      if (el.classList.contains('story-dot')) {
-        el.classList.add('revealed');
-      }
-
-      // special: timeline line grows
-      if (el.classList.contains('story-timeline')) {
-        setTimeout(() => el.classList.add('line-grow'), 150);
-      }
-
-      // special: gallery items stagger
-      if (el.classList.contains('gallery-item')) {
-        el.classList.add('revealed');
-      }
-
-      // special: divider grows
-      if (el.classList.contains('divider-leaf')) {
-        el.classList.add('revealed');
-      }
-
-      // special: event card top bar
-      if (el.classList.contains('event-card')) {
-        el.classList.add('revealed');
-      }
-
-      // special: message items slide in
-      if (el.classList.contains('message-item')) {
-        el.classList.add('revealed');
-      }
-
-      // section wash background flash
       if (el.tagName === 'SECTION') {
         el.classList.add('in-view');
         setTimeout(() => el.classList.remove('in-view'), 700);
@@ -176,104 +288,54 @@ function initScrollReveal() {
 
       observer.unobserve(el);
     });
-  }, {
-    threshold: 0.12,
-    rootMargin: '0px 0px -40px 0px'
-  });
+  }, { threshold: 0.10, rootMargin: '0px 0px -36px 0px' });
 
-  // observe everything that needs it
-  const selectors = [
-    '.reveal', '.reveal-left', '.reveal-right', '.reveal-scale',
-    '.story-dot', '.story-timeline', '.gallery-item',
-    '.divider-leaf', '.event-card', '.message-item', 'section'
-  ];
-  selectors.forEach(sel => {
-    document.querySelectorAll(sel).forEach(el => observer.observe(el));
-  });
+  ['.reveal','.reveal-left','.reveal-right','.reveal-scale',
+   '.story-dot','.story-timeline','.gallery-item',
+   '.divider-leaf','.event-card','.message-item','section']
+    .forEach(sel => document.querySelectorAll(sel).forEach(el => observer.observe(el)));
 }
 
-/* ============================================================
-   ADD REVEAL CLASSES PROGRAMMATICALLY
-   So the HTML stays clean — JS decides who gets what animation.
-   ============================================================ */
 function addRevealClasses() {
-
-  /* ---- hero section (first section after nav) ---- */
-  const heroSection = document.querySelector('#main-content > section:first-of-type');
-  if (heroSection) {
-    heroSection.querySelector('.section-label')?.classList.add('reveal', 'd1');
-    heroSection.querySelector('.section-title')?.classList.add('reveal', 'd2');
-  }
-
-  /* ---- all section labels & titles ---- */
-  document.querySelectorAll('.section-label').forEach((el, i) => {
+  // Section labels & titles
+  document.querySelectorAll('.section-label').forEach(el => {
     if (!el.classList.contains('reveal')) el.classList.add('reveal');
   });
   document.querySelectorAll('.section-title').forEach(el => {
-    if (!el.classList.contains('reveal')) el.classList.add('reveal', 'd1');
+    if (!el.classList.contains('reveal')) el.classList.add('reveal','d1');
   });
 
-  /* ---- countdown boxes slide up with stagger ---- */
+  // Countdown boxes stagger
   document.querySelectorAll('.countdown-box').forEach((el, i) => {
     el.classList.add('reveal', `d${i + 1}`);
   });
 
-  /* ---- couple: bride from right, groom from left, amp scale ---- */
-  const coupleCards = document.querySelectorAll('.couple-card');
-  if (coupleCards[0]) coupleCards[0].classList.add('reveal-left');
-  if (coupleCards[1]) coupleCards[1].classList.add('reveal-right');
-  const amp = document.querySelector('.couple-amp');
-  if (amp) amp.classList.add('reveal-scale');
+  // Couple cards
+  const cards = document.querySelectorAll('.couple-card');
+  if (cards[0]) cards[0].classList.add('reveal-left');
+  if (cards[1]) cards[1].classList.add('reveal-right');
+  document.querySelector('.couple-amp')?.classList.add('reveal-scale');
 
-  /* ---- event cards alternate left/right ---- */
+  // Event cards
   document.querySelectorAll('.event-card').forEach((el, i) => {
     el.classList.add(i % 2 === 0 ? 'reveal-left' : 'reveal-right');
   });
 
-  /* ---- story text: odd from right, even from left ---- */
-  document.querySelectorAll('.story-item').forEach((item, i) => {
-    const text = item.querySelector('.story-text');
-    if (!text) return;
-    text.classList.add(i % 2 === 0 ? 'reveal-right' : 'reveal-left');
-  });
-
-  /* ---- gallery items: scale in with stagger ---- */
+  // Gallery stagger
   document.querySelectorAll('.gallery-item').forEach((el, i) => {
-    el.style.transitionDelay = `${(i % 3) * 0.1 + Math.floor(i / 3) * 0.08}s`;
+    el.style.transitionDelay = `${(i % 2) * 0.12}s`;
   });
 
-  /* ---- ucapan form ---- */
+  // Forms
   document.querySelector('.ucapan-form')?.classList.add('reveal');
+  document.querySelector('.gift-card')?.classList.add('reveal');
 
-  /* ---- rsvp container ---- */
-  document.querySelector('.rsvp-container')?.classList.add('reveal');
-
-  /* ---- footer children ---- */
+  // Footer
   const footer = document.querySelector('footer');
   if (footer) {
-    footer.querySelector('.footer-label')?.classList.add('reveal', 'd1');
-    footer.querySelector('.footer-names')?.classList.add('reveal', 'd2');
+    footer.querySelector('.footer-label')?.classList.add('reveal','d1');
+    footer.querySelector('.footer-names')?.classList.add('reveal','d2');
   }
-}
-
-/* ===================== COPY TO CLIPBOARD ===================== */
-function copyText(elementId, btn) {
-  const text = document.getElementById(elementId).innerText;
-  const originalText = btn.innerText;
-
-  navigator.clipboard.writeText(text).then(() => {
-    btn.innerText = "✓ Tersalin";
-    btn.style.background = "var(--green)";
-    btn.style.color = "#fff";
-    
-    setTimeout(() => {
-      btn.innerText = originalText;
-      btn.style.background = "";
-      btn.style.color = "";
-    }, 2000);
-  }).catch(err => {
-    console.error('Gagal menyalin: ', err);
-  });
 }
 
 /* ============================================================
@@ -282,243 +344,124 @@ function copyText(elementId, btn) {
 function openLightbox(src) {
   const lb  = document.getElementById('lightbox');
   const img = document.getElementById('lightbox-img');
+  if (!lb || !img) return;
   img.src = src;
   lb.classList.add('open');
   document.body.style.overflow = 'hidden';
 }
 function closeLightbox() {
   const lb = document.getElementById('lightbox');
-  lb.style.animation = 'lbOut 0.25s ease forwards';
+  if (!lb) return;
+  lb.style.animation = 'lbOut 0.28s ease forwards';
   setTimeout(() => {
     lb.classList.remove('open');
     lb.style.animation = '';
     document.body.style.overflow = '';
-  }, 240);
+  }, 260);
 }
-
-/* add lbOut keyframe dynamically */
 (function() {
-  const style = document.createElement('style');
-  style.textContent = `@keyframes lbOut { to { opacity: 0; } }`;
-  document.head.appendChild(style);
+  const s = document.createElement('style');
+  s.textContent = `@keyframes lbOut { to { opacity: 0; } }`;
+  document.head.appendChild(s);
 })();
 
 /* ============================================================
-   RSVP INTERACTIONS
+   RSVP / UCAPAN
    ============================================================ */
-function toggleCheck(el) {
-  const cb = el.querySelector('.rsvp-checkbox');
-  if (cb.classList.contains('checked')) {
-    cb.classList.remove('checked');
-    cb.textContent = '';
-  } else {
-    cb.classList.add('checked');
-    cb.textContent = '✓';
-  }
-}
-
-function setJumlah(btn) {
-  document.querySelectorAll('.jumlah-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-}
-
-function submitRSVP() {
-  const btn = document.querySelector('#rsvp .btn-submit');
-  if (btn) {
-    btn.textContent = '✓ Terkirim!';
-    btn.style.background = 'var(--green)';
-    setTimeout(() => {
-      btn.textContent = 'Kirim Konfirmasi';
-      btn.style.background = '';
-    }, 3000);
-  }
-}
-
-/* ============================================================
-   UCAPAN / MESSAGES
-   ============================================================ */
-// Fungsi untuk memilih status kehadiran
 function setStatusHadir(btn, status) {
-  // Reset semua tombol di container yang sama
-  const container = btn.parentElement;
-  container.querySelectorAll('.btn-status').forEach(b => b.classList.remove('active'));
-  
-  // Aktifkan tombol yang diklik
+  btn.parentElement.querySelectorAll('.btn-status').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  
-  // Set value ke hidden input
   document.getElementById('ucapan-status').value = status;
 }
 
-// Update fungsi kirimUcapan yang sudah ada
 async function kirimUcapan() {
   const namaEl   = document.getElementById('ucapan-nama');
   const pesanEl  = document.getElementById('ucapan-pesan');
   const statusEl = document.getElementById('ucapan-status');
+  const btn      = document.querySelector('#ucapan .btn-submit');
 
-  const btnSubmit = document.querySelector('#ucapan .btn-submit');
-  
   const nama   = namaEl.value.trim();
   const pesan  = pesanEl.value.trim();
   const status = statusEl.value;
 
   if (!nama || !pesan || !status) {
+    [namaEl, pesanEl].forEach(el => {
+      if (!el.value.trim()) shakeEl(el);
+    });
     alert("Mohon isi nama, pesan, dan konfirmasi kehadiran Anda.");
     return;
   }
 
-  // Efek Loading
-  btnSubmit.disabled = true;
-  btnSubmit.innerHTML = '<span>⌛ Mengirim...</span>';
+  btn.disabled = true;
+  btn.innerHTML = '⌛ Mengirim...';
 
   try {
-    // Kirim ke Google Sheets
     await fetch(SCRIPT_URL, {
       method: 'POST',
       body: JSON.stringify({ nama, status, pesan })
     });
 
-    // Feedback Berhasil
-    btnSubmit.textContent = '🌸 Terkirim!';
-    btnSubmit.style.background = 'var(--green)';
-    
-    // Reset Form
-    namaEl.value = '';
+    btn.textContent = '🌸 Terkirim!';
+    btn.style.background = 'var(--green)';
+    namaEl.value  = '';
     pesanEl.value = '';
     statusEl.value = '';
     document.querySelectorAll('.btn-status').forEach(b => b.classList.remove('active'));
 
-    // Muat ulang daftar pesan agar yang baru muncul
     loadMessages();
 
     setTimeout(() => {
-      btnSubmit.disabled = false;
-      btnSubmit.textContent = 'Kirim Ucapan';
-      btnSubmit.style.background = '';
-    }, 3000);
+      btn.disabled   = false;
+      btn.textContent = 'Kirim Ucapan';
+      btn.style.background = '';
+    }, 3200);
 
-  } catch (error) {
-    console.error('Error!', error.message);
-    alert("Maaf, gagal mengirim ucapan. Silakan coba lagi.");
-    btnSubmit.disabled = false;
-    btnSubmit.textContent = 'Kirim Ucapan';
+  } catch (err) {
+    console.error(err);
+    alert("Maaf, gagal mengirim. Silakan coba lagi.");
+    btn.disabled   = false;
+    btn.textContent = 'Kirim Ucapan';
   }
 }
 
 async function loadMessages() {
-  const listContainer = document.getElementById('messages-list');
-  listContainer.innerHTML = '<p style="text-align:center; font-size:12px; opacity:0.6;">Memuat pesan...</p>';
+  const list = document.getElementById('messages-list');
+  if (!list) return;
+  list.innerHTML = '<p style="text-align:center;font-size:12px;opacity:0.6;padding:20px 0;">Memuat pesan...</p>';
 
   try {
-    const response = await fetch(SCRIPT_URL);
-    const data = await response.json();
+    const res  = await fetch(SCRIPT_URL);
+    const data = await res.json();
 
-    if (data.length === 0) {
-      listContainer.innerHTML = '<p style="text-align:center; font-size:12px; opacity:0.5;">Belum ada ucapan.</p>';
+    if (!data.length) {
+      list.innerHTML = '<p style="text-align:center;font-size:12px;opacity:0.5;padding:20px 0;">Belum ada ucapan.</p>';
       return;
     }
 
-    // Render data ke HTML
-    listContainer.innerHTML = data.map(item => `
+    list.innerHTML = data.map(item => `
       <div class="message-item revealed pop-in">
         <div class="message-icon">💌</div>
         <div>
           <div class="message-name">
-            ${escapeHtml(item.nama)} 
-            <span class="message-status">${item.status}</span>
+            ${escapeHtml(item.nama)}
+            <span class="message-status">${escapeHtml(item.status)}</span>
           </div>
           <div class="message-text">${escapeHtml(item.pesan)}</div>
         </div>
       </div>
     `).join('');
 
-  } catch (error) {
-    listContainer.innerHTML = '<p style="text-align:center; color:red; font-size:12px;">Gagal memuat ucapan.</p>';
-    console.error(error);
+  } catch (err) {
+    list.innerHTML = '<p style="text-align:center;color:var(--rose);font-size:12px;padding:20px 0;">Gagal memuat ucapan.</p>';
   }
 }
 
-window.addEventListener('DOMContentLoaded', () => {
-  gantiNamaTamu();
-  loadMessages(); // Tambahkan ini agar pesan langsung muncul saat web dibuka
-});
-
-function escapeHtml(str) {
-  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-
-/* shake keyframe */
-(function() {
-  const style = document.createElement('style');
-  style.textContent = `
-    @keyframes shake {
-      0%,100% { transform: translateX(0); }
-      20%      { transform: translateX(-7px); }
-      40%      { transform: translateX(7px); }
-      60%      { transform: translateX(-5px); }
-      80%      { transform: translateX(5px); }
-    }
-  `;
-  document.head.appendChild(style);
-})();
-
 /* ============================================================
-   NAMA TAMU DARI URL  (?to=Budi+Santoso)
+   GIFT SECTION
    ============================================================ */
-function gantiNamaTamu() {
-  const params    = new URLSearchParams(window.location.search);
-  const namaTamu  = params.get('to');
-  if (namaTamu) {
-    const el = document.querySelector('.cover-guest');
-    if (el) el.innerText = namaTamu;
-  }
-}
-window.addEventListener('DOMContentLoaded', gantiNamaTamu);
-
-/* ============================================================
-   ACTIVE NAV HIGHLIGHT on scroll
-   ============================================================ */
-function initActiveNav() {
-  const sections = document.querySelectorAll('section[id], #countdown-section');
-  const navLinks = document.querySelectorAll('.sticky-nav a');
-
-  const io = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const id = entry.target.id;
-        navLinks.forEach(a => {
-          a.style.color = a.getAttribute('href') === `#${id}`
-            ? 'var(--rose)' : '';
-        });
-      }
-    });
-  }, { threshold: 0.4 });
-
-  sections.forEach(s => io.observe(s));
-}
-
-/* ============================================================
-   MUSIC TOGGLE
-   ============================================================ */
-function toggleMusic(e) {
-  const audio = document.getElementById('wedding-audio');
-  const btn = document.getElementById('music-control');
-  const icon = document.getElementById('music-icon');
-
-  if (audio.paused) {
-    audio.play();
-    btn.classList.add('playing');
-    icon.textContent = '🎵';
-  } else {
-    audio.pause();
-    btn.classList.remove('playing');
-    icon.textContent = '🔇';
-  }
-}
-
 const giftData = {
   bri: {
-    bank: "BRI",
+    bank: "Bank BRI",
     number: "3638 0103 6696 532",
     holder: "a.n. INA NIKMATUL CHASANAH",
     btnText: "Salin Nomor"
@@ -532,50 +475,130 @@ const giftData = {
   ewallet: {
     bank: "E-Wallet",
     number: "088224906918",
-    holder: "GoPay, OVO, DANA, ShopeePay",
+    holder: "GoPay • OVO • DANA • ShopeePay",
     btnText: "Salin Nomor"
   },
   kado: {
     bank: "Alamat Pengiriman",
-    number: "Dsn. Grogol RT/RW 006/006 Ds. Grogol Kec. Diwek Kab. Jombang",
+    number: "Dsn. Grogol RT/RW 006/006\nDs. Grogol Kec. Diwek Kab. Jombang",
     holder: "Penerima: Ina Nikmatul Chasanah",
     btnText: "Salin Alamat"
   }
 };
 
 function updateGiftDisplay() {
-  const selector = document.getElementById('gift-selector');
-  const selected = giftData[selector.value];
+  const key       = document.getElementById('gift-selector').value;
+  const selected  = giftData[key];
   const detailBox = document.getElementById('gift-detail-box');
 
-  // Animasi fade out sederhana
   detailBox.style.opacity = '0';
-  
+  detailBox.style.transform = 'translateY(8px)';
+  detailBox.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
+
   setTimeout(() => {
-    document.getElementById('display-bank').innerText = selected.bank;
+    document.getElementById('display-bank').innerText   = selected.bank;
     document.getElementById('display-number').innerText = selected.number;
     document.getElementById('display-holder').innerText = selected.holder;
-    document.getElementById('btn-copy-gift').innerText = selected.btnText;
-    
-    // Fade in kembali
-    detailBox.style.opacity = '1';
-  }, 200);
+    document.getElementById('btn-copy-gift').innerText  = selected.btnText;
+    detailBox.style.opacity   = '1';
+    detailBox.style.transform = 'translateY(0)';
+  }, 230);
 }
 
 function copyGiftText() {
   const text = document.getElementById('display-number').innerText;
-  const btn = document.getElementById('btn-copy-gift');
-  const originalText = btn.innerText;
+  const btn  = document.getElementById('btn-copy-gift');
+  const orig = btn.innerText;
 
   navigator.clipboard.writeText(text).then(() => {
     btn.innerText = "✓ Tersalin";
     btn.style.background = "var(--green)";
     btn.style.color = "#fff";
-    
     setTimeout(() => {
-      btn.innerText = originalText;
+      btn.innerText = orig;
+      btn.style.background = "";
+      btn.style.color = "";
+    }, 2200);
+  });
+}
+
+/* ============================================================
+   NAMA TAMU DARI URL
+   ============================================================ */
+function gantiNamaTamu() {
+  const name = new URLSearchParams(window.location.search).get('to');
+  if (name) {
+    const el = document.querySelector('.cover-guest');
+    if (el) el.innerText = name;
+  }
+}
+
+/* ============================================================
+   ACTIVE NAV HIGHLIGHT
+   ============================================================ */
+function initActiveNav() {
+  const sections = document.querySelectorAll('section[id], #countdown-section');
+  const navLinks = document.querySelectorAll('.sticky-nav a');
+
+  new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const id = entry.target.id;
+      navLinks.forEach(a => {
+        const match = a.getAttribute('href') === `#${id}`;
+        a.classList.toggle('active-nav', match);
+      });
+    });
+  }, { threshold: 0.35 }).observe(
+    ...Array.from(sections).length ? sections : [document.body]
+  );
+
+  // Separate observer for each section
+  sections.forEach(s => {
+    new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        navLinks.forEach(a => {
+          a.classList.toggle('active-nav', a.getAttribute('href') === `#${entry.target.id}`);
+        });
+      });
+    }, { threshold: 0.35 }).observe(s);
+  });
+}
+
+/* ============================================================
+   HELPERS
+   ============================================================ */
+function escapeHtml(str = '') {
+  return String(str)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function shakeEl(el) {
+  const s = document.createElement('style');
+  s.textContent = `@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(7px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}`;
+  document.head.appendChild(s);
+  el.style.animation = 'shake 0.4s ease';
+  el.addEventListener('animationend', () => el.style.animation = '', { once: true });
+}
+
+function copyText(elementId, btn) {
+  const text = document.getElementById(elementId)?.innerText;
+  if (!text) return;
+  const orig = btn.innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.innerText = "✓ Tersalin";
+    btn.style.background = "var(--green)";
+    btn.style.color = "#fff";
+    setTimeout(() => {
+      btn.innerText = orig;
       btn.style.background = "";
       btn.style.color = "";
     }, 2000);
   });
+}
+
+function changePage(dir) {
+  // placeholder for pagination if needed
 }
