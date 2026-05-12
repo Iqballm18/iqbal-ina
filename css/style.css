@@ -17,6 +17,21 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; margin: 0; padding: 0; }
 
+/* Update di style.css */
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  /* Hapus height: 100% jika ada */
+  min-height: 100%; 
+  background: var(--cream); /* Warna dasar harus sama dengan section terakhir */
+}
+
+body {
+  overflow-x: hidden;
+  position: relative;
+}
+
 body {
   font-family: 'Jost', sans-serif;
   background: var(--cream);
@@ -83,7 +98,11 @@ body {
   overflow: hidden;
 }
 
-#main-content { display: none; background: var(--cream); }
+#main-content {
+  display: none; 
+  flex-direction: column;
+  min-height: 100vh;
+}
 
 /* Subtle gold vignette border on cover */
 #cover::after {
@@ -151,6 +170,7 @@ body {
   pointer-events: none;
   opacity: 0;
   animation: petalFall linear infinite;
+  z-index: 1;
 }
 @keyframes petalFall {
   0%   { transform: translateY(-30px) rotate(0deg) translateX(0);   opacity: 0; }
@@ -286,7 +306,9 @@ body {
 /* ============================================================
    MAIN CONTENT
    ============================================================ */
-#main-content.open { display: block; animation: mainFadeIn 0.8s ease both; }
+#main-content.open {
+  display: flex; /* Ubah dari block ke flex */
+}
 #main-content footer { display: block; } /* ensure footer is last visible element */
 @keyframes mainFadeIn {
   from { opacity: 0; transform: translateY(16px); }
@@ -1004,18 +1026,16 @@ section {
    FOOTER
    ============================================================ */
 footer {
-  background: var(--green); color: #fff;
-  text-align: center; padding: 80px 24px 60px;
-  position: relative; overflow: hidden;
-  margin: 0;
+  background: var(--green); 
+  color: #fff;
+  text-align: center; 
+  padding: 80px 24px 60px;
+  position: relative; 
+  overflow: hidden;
+  margin-top: auto; /* Menghilangkan celah pixel antar elemen */
   width: 100%;
-  max-width: 100%;
-  display: block;
 }
-/* Ensure body ends with green, not cream */
-body {
-  background: var(--green);
-}
+
 footer::before {
   content: '';
   position: absolute; inset: 0;

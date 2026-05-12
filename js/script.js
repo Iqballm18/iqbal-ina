@@ -80,29 +80,21 @@ window.addEventListener('DOMContentLoaded', () => {
 const FADE_DURATION = 2200;   // ms — how long the full fade takes
 let   fadeInterval  = null;
 
+/* ============================================================
+   MUSIC PLAYER — INSTANT PLAY/PAUSE
+   ============================================================ */
+
 function musicFadeIn() {
   const audio = document.getElementById('wedding-audio');
   if (!audio) return;
 
-  clearInterval(fadeInterval);
-  audio.volume = 0;
+  // Set volume langsung ke target tanpa interval
+  audio.volume = 0.72;
 
   audio.play().then(() => {
-    const target = 0.72;
-    const steps  = 60;
-    const step   = target / steps;
-    let   vol    = 0;
-
-    fadeInterval = setInterval(() => {
-      vol = Math.min(vol + step, target);
-      audio.volume = parseFloat(vol.toFixed(4));
-      if (vol >= target) clearInterval(fadeInterval);
-    }, FADE_DURATION / steps);
-
     setPillState(true);
   }).catch(err => {
     console.log('Autoplay blocked — waiting for interaction:', err);
-    // Will play on first user interaction
     document.addEventListener('click', function firstClick() {
       musicFadeIn();
       document.removeEventListener('click', firstClick);
@@ -112,25 +104,12 @@ function musicFadeIn() {
 
 function musicFadeOut(callback) {
   const audio = document.getElementById('wedding-audio');
-  if (!audio || audio.paused) { if (callback) callback(); return; }
+  if (!audio) return;
 
-  clearInterval(fadeInterval);
-  const startVol = audio.volume;
-  const steps    = 1;
-  const step     = startVol / steps;
-  let   vol      = startVol;
-
-  fadeInterval = setInterval(() => {
-    vol = Math.max(vol - step, 0);
-    audio.volume = parseFloat(vol.toFixed(3));
-    if (vol <= 0) {
-      clearInterval(fadeInterval);
-      audio.pause();
-      if (callback) callback();
-    }
-  }, FADE_DURATION / steps);
-
+  // Langsung pause
+  audio.pause();
   setPillState(false);
+  if (callback) callback();
 }
 
 /* Toggle called by the button */
