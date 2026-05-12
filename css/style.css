@@ -1292,15 +1292,6 @@ footer .footer-credit {
    ============================================================ */
 #pagination-controls { display: flex; justify-content: center; gap: 15px; margin-top: 20px; }
 
-/* ============================================================
-   SECTION WASH — use opacity only, never background (avoids reflow)
-   ============================================================ */
-section.in-view { /* intentionally empty — removed sectionWash background animation
-                     which was causing layout reflow and shake on scroll */ }
-
-/* ============================================================
-   RESPONSIVE
-   ============================================================ */
 @media (max-width: 520px) {
   .couple-grid { grid-template-columns: 1fr; gap: 8px; }
   .couple-amp  { font-size: 44px; }
