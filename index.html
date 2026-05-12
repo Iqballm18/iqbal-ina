@@ -3,7 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Wedding Invitation Iqbal & Ina</title>
+  <title>Wedding Invitation Iqbal & Ina — 21 Agustus 2026</title>
+
+  <!-- SEO & Open Graph for WhatsApp/Social Media Preview -->
+  <meta name="description" content="Undangan Pernikahan Iqbal Maulana & Ina Nikmatul Chasanah — 21 Agustus 2026, Jombang, Jawa Timur. Mohon doa restu dan kehadirannya.">
+  <meta property="og:title" content="Undangan Pernikahan Iqbal & Ina">
+  <meta property="og:description" content="Kami mengundang Anda untuk hadir di acara pernikahan kami — 21 Agustus 2026, Jombang.">
+  <meta property="og:image" content="https://cdn.kadio.id/upload/invitation/1720595030_Rectangle-12.png">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#6b7c5e">
+
+  <!-- Preconnect for faster font loading -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
@@ -71,7 +84,7 @@
 
     <div class="cover-to fade-up delay-2">Kepada Yth. Bpk/Ibu/Saudara/i</div>
     <div class="cover-guest fade-up delay-2">Nama Tamu</div>
-    <div style="font-size:11px;color:var(--text);opacity:.45;margin-top:4px;letter-spacing:1px;" class="fade-up delay-2">di Tempat</div>
+    <div class="cover-place fade-up delay-2">di Tempat</div>
 
     <a href="#" class="btn-open fade-up delay-3" onclick="openInvitation(event)">
       Buka Undangan
@@ -79,9 +92,9 @@
   </div>
 
   <!-- ===================== LIGHTBOX ===================== -->
-  <div class="lightbox" id="lightbox" onclick="closeLightbox()">
-    <span class="lightbox-close">×</span>
-    <img src="" id="lightbox-img" alt="">
+  <div class="lightbox" id="lightbox" onclick="closeLightbox()" role="dialog" aria-label="Galeri foto" aria-modal="true">
+    <span class="lightbox-close" role="button" aria-label="Tutup galeri">×</span>
+    <img src="" id="lightbox-img" alt="Foto galeri pernikahan">
   </div>
 
   <!-- ===================== MUSIC PLAYER PILL ===================== -->
@@ -124,10 +137,10 @@
     </nav>
 
     <!-- ===== HERO ===== -->
-    <section style="padding:80px 20px 50px; position:relative; overflow:hidden;">
+    <section class="hero-section">
 
       <!-- Subtle background floral SVG -->
-      <svg style="position:absolute;top:0;right:-20px;width:180px;opacity:0.06;pointer-events:none;" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <svg class="hero-floral-bg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <circle cx="100" cy="100" r="80" stroke="#c9a96e" stroke-width="0.8" fill="none"/>
         <circle cx="100" cy="100" r="60" stroke="#c9a96e" stroke-width="0.5" fill="none"/>
         <circle cx="100" cy="100" r="40" stroke="#c9a96e" stroke-width="0.4" fill="none"/>
@@ -140,13 +153,13 @@
       <div class="divider-leaf">
         <div class="divider-leaf-center">
           <span>✦</span>
-          <span style="font-size:14px;">❧</span>
+          <span class="divider-leaf-icon">❧</span>
           <span>✦</span>
         </div>
       </div>
 
       <div class="reveal d2">
-        <p style="font-size:14px;opacity:.72;line-height:2;max-width:520px;margin:0 auto 0;">
+        <p class="hero-intro-text">
           Dengan memohon rahmat dan ridho Allah SWT, kami bermaksud mengundang<br>Bapak/Ibu/Saudara/i ke acara pernikahan kami:
         </p>
       </div>
@@ -160,12 +173,12 @@
     <!-- ===== COUNTDOWN ===== -->
     <div id="countdown-section">
       <div class="section-label reveal">Save The Date</div>
-      <div class="section-title reveal d1" style="font-size:clamp(22px,5vw,32px);">Jumat, 21 Agustus 2026</div>
+      <div class="section-title reveal d1 countdown-date-title">Jumat, 21 Agustus 2026</div>
 
-      <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin:12px auto 32px;opacity:0.6;" class="reveal d2">
-        <span style="width:40px;height:1px;background:rgba(201,213,184,0.6);display:block;"></span>
-        <span style="font-size:10px;letter-spacing:3px;color:var(--gold-light);">JOMBANG · JAWA TIMUR</span>
-        <span style="width:40px;height:1px;background:rgba(201,213,184,0.6);display:block;"></span>
+      <div class="countdown-location reveal d2">
+        <span class="countdown-line"></span>
+        <span class="countdown-location-text">JOMBANG · JAWA TIMUR</span>
+        <span class="countdown-line"></span>
       </div>
 
       <div class="countdown-boxes" id="countdown-boxes">
@@ -187,21 +200,18 @@
         </div>
       </div>
 
-      <div class="reveal d5" style="margin-top:36px;">
-        <a href="#" id="btn-google-calendar" target="_blank"
-           style="display:inline-flex;align-items:center;gap:8px;padding:12px 32px;border-radius:40px;background:rgba(255,255,255,0.12);border:1px solid rgba(201,213,184,0.4);color:#fff;text-decoration:none;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;transition:background 0.3s,transform 0.3s;"
-           onmouseover="this.style.background='rgba(255,255,255,0.22)';this.style.transform='translateY(-2px)';"
-           onmouseout="this.style.background='rgba(255,255,255,0.12)';this.style.transform='';">
+      <div class="reveal d5 countdown-calendar-wrap">
+        <a href="#" id="btn-google-calendar" target="_blank" class="btn-save-calendar" rel="noopener noreferrer">
           🗓️ Simpan ke Kalender
         </a>
       </div>
     </div>
 
     <!-- ===== MEMPELAI ===== -->
-    <section id="bridegroom" style="position:relative;overflow:hidden;">
+    <section id="bridegroom" class="section-overflow-hidden">
 
       <!-- Decorative background ring -->
-      <svg style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:340px;opacity:0.04;pointer-events:none;" viewBox="0 0 340 340">
+      <svg class="couple-bg-ring" viewBox="0 0 340 340" aria-hidden="true">
         <circle cx="170" cy="170" r="165" stroke="#c9a96e" stroke-width="1" fill="none" stroke-dasharray="6 4"/>
         <circle cx="170" cy="170" r="140" stroke="#c9a96e" stroke-width="0.6" fill="none"/>
       </svg>
@@ -210,10 +220,10 @@
       <div class="section-title">Kami Yang Berbahagia</div>
       <div class="divider-leaf">
         <div class="divider-leaf-center">
-          <span>✦</span><span style="font-size:14px;">❧</span><span>✦</span>
+          <span>✦</span><span class="divider-leaf-icon">❧</span><span>✦</span>
         </div>
       </div>
-      <p class="reveal d2" style="font-size:13px;opacity:.7;line-height:1.9;margin-bottom:28px;">
+      <p class="reveal d2 section-subtitle">
         Dengan undangan ini, kami bermaksud mengundang Bapak/Ibu/Saudara/i<br>
         untuk hadir dalam acara pernikahan kami.
       </p>
@@ -228,7 +238,7 @@
             Putra dari<br>
             Bapak Agus Suyanto<br>
             &amp; Ibu Nurlisa Wahyu Darwanti<br>
-            <span style="font-size:11px;color:var(--rose);">Perum Denanyar Indah, Jombang</span>
+            <span class="couple-location">Perum Denanyar Indah, Jombang</span>
           </div>
           <div class="couple-item reveal">
             <a href="https://instagram.com/ibl.mlna" target="_blank" class="btn-ig">
@@ -248,7 +258,7 @@
             Putri dari<br>
             Bapak Mukti Ali<br>
             &amp; Ibu Nur Chomsatun<br>
-            <span style="font-size:11px;color:var(--rose);">Ds. Grogol, Diwek, Jombang</span>
+            <span class="couple-location">Ds. Grogol, Diwek, Jombang</span>
           </div>
           <div class="couple-item reveal">
             <a href="https://instagram.com/inanikma_" target="_blank" class="btn-ig">
@@ -265,7 +275,7 @@
       <div class="section-title">Waktu &amp; Tempat</div>
       <div class="divider-leaf">
         <div class="divider-leaf-center">
-          <span>✦</span><span style="font-size:14px;">❧</span><span>✦</span>
+          <span>✦</span><span class="divider-leaf-icon">❧</span><span>✦</span>
         </div>
       </div>
 
@@ -300,10 +310,10 @@
     </section>
 
     <!-- ===== GIFT ===== -->
-    <section id="gift" style="position:relative;overflow:hidden;">
+    <section id="gift" class="section-overflow-hidden">
 
       <!-- Watermark ornament -->
-      <svg style="position:absolute;bottom:-10px;right:-20px;width:160px;opacity:0.05;pointer-events:none;" viewBox="0 0 160 160">
+      <svg class="gift-watermark" viewBox="0 0 160 160" aria-hidden="true">
         <path d="M80 10 L150 80 L80 150 L10 80 Z" stroke="#c9a96e" stroke-width="1" fill="none"/>
         <path d="M80 30 L130 80 L80 130 L30 80 Z" stroke="#c9a96e" stroke-width="0.6" fill="none"/>
         <circle cx="80" cy="80" r="15" stroke="#c9a96e" stroke-width="0.5" fill="none"/>
@@ -313,10 +323,10 @@
       <div class="section-title">Tanda Kasih</div>
       <div class="divider-leaf">
         <div class="divider-leaf-center">
-          <span>✦</span><span style="font-size:14px;">❧</span><span>✦</span>
+          <span>✦</span><span class="divider-leaf-icon">❧</span><span>✦</span>
         </div>
       </div>
-      <p class="reveal d2" style="font-size:13px;opacity:.7;line-height:1.9;margin-bottom:28px;">
+      <p class="reveal d2 section-subtitle">
         Do'a restu keluarga dan sahabat adalah hadiah terbesar bagi kami.<br>
         Namun jika memberi adalah tanda kasih, kami dengan tulus menerimanya.
       </p>
@@ -348,27 +358,27 @@
       <div class="section-title">Momen Bahagia</div>
       <div class="divider-leaf">
         <div class="divider-leaf-center">
-          <span>✦</span><span style="font-size:14px;">❧</span><span>✦</span>
+          <span>✦</span><span class="divider-leaf-icon">❧</span><span>✦</span>
         </div>
       </div>
 
       <div class="gallery-grid">
         <div class="gallery-item" onclick="openLightbox('https://cdn.kadio.id/upload/invitation/1720595030_Rectangle-12.png')">
-          <img src="https://cdn.kadio.id/upload/invitation/1720595030_Rectangle-12.png" alt="Gallery 1"
+          <img src="https://cdn.kadio.id/upload/invitation/1720595030_Rectangle-12.png" alt="Foto prewedding Iqbal dan Ina" loading="lazy"
                onerror="this.parentElement.innerHTML='💐'">
         </div>
         <div class="gallery-item" onclick="openLightbox('https://cdn.kadio.id/upload/invitation/1720595030_Rectangle-11.png')">
-          <img src="https://cdn.kadio.id/upload/invitation/1720595030_Rectangle-11.png" alt="Gallery 2"
+          <img src="https://cdn.kadio.id/upload/invitation/1720595030_Rectangle-11.png" alt="Foto prewedding Iqbal dan Ina" loading="lazy"
                onerror="this.parentElement.innerHTML='🌸'">
         </div>
       </div>
     </section>
 
     <!-- ===== UCAPAN ===== -->
-    <section id="ucapan" style="position:relative;overflow:hidden;">
+    <section id="ucapan" class="section-overflow-hidden">
 
       <!-- Decorative dots -->
-      <svg style="position:absolute;top:20px;left:-10px;width:120px;opacity:0.06;pointer-events:none;" viewBox="0 0 120 120">
+      <svg class="ucapan-dots-bg" viewBox="0 0 120 120" aria-hidden="true">
         <circle cx="20" cy="20" r="3" fill="#c9a96e"/>
         <circle cx="40" cy="20" r="2" fill="#c9a96e"/>
         <circle cx="60" cy="20" r="1.5" fill="#c9a96e"/>
@@ -384,18 +394,18 @@
       <div class="section-title">Pesan untuk Mempelai</div>
       <div class="divider-leaf">
         <div class="divider-leaf-center">
-          <span>✦</span><span style="font-size:14px;">❧</span><span>✦</span>
+          <span>✦</span><span class="divider-leaf-icon">❧</span><span>✦</span>
         </div>
       </div>
 
-      <div class="ucapan-form reveal">
+      <form class="ucapan-form reveal" onsubmit="event.preventDefault(); kirimUcapan();" aria-label="Form ucapan dan doa">
         <div class="form-group">
-          <label>Nama</label>
-          <input type="text" id="ucapan-nama" placeholder="Nama Anda">
+          <label for="ucapan-nama">Nama</label>
+          <input type="text" id="ucapan-nama" placeholder="Nama Anda" required>
         </div>
         <div class="form-group">
           <label>Konfirmasi Kehadiran</label>
-          <div class="status-hadir-container">
+          <div class="status-hadir-container" role="group" aria-label="Pilih status kehadiran">
             <button type="button" class="btn-status" onclick="setStatusHadir(this,'Hadir')">✓ Hadir</button>
             <button type="button" class="btn-status" onclick="setStatusHadir(this,'Tidak Hadir')">✕ Tidak Hadir</button>
             <button type="button" class="btn-status" onclick="setStatusHadir(this,'Ragu-ragu')">? Ragu-ragu</button>
@@ -403,17 +413,17 @@
           <input type="hidden" id="ucapan-status" value="">
         </div>
         <div class="form-group">
-          <label>Pesan untuk Mempelai</label>
-          <textarea id="ucapan-pesan" rows="4" placeholder="Tuliskan doa dan ucapan Anda..."></textarea>
+          <label for="ucapan-pesan">Pesan untuk Mempelai</label>
+          <textarea id="ucapan-pesan" rows="4" placeholder="Tuliskan doa dan ucapan Anda..." required></textarea>
         </div>
-        <button class="btn-submit" onclick="kirimUcapan()">Kirim Ucapan</button>
-      </div>
+        <button type="submit" class="btn-submit">Kirim Ucapan</button>
+      </form>
 
-      <div id="messages-list" class="messages-list" style="max-height:520px;overflow-y:auto;"></div>
+      <div id="messages-list" class="messages-list"></div>
 
-      <div id="pagination-controls" style="display:flex;justify-content:center;gap:15px;margin-top:20px;">
+      <div id="pagination-controls" class="pagination-controls">
         <button id="prev-page" class="btn-copy" onclick="changePage(-1)" style="display:none;">&laquo; Sebelumnya</button>
-        <span id="page-info" style="font-size:13px;align-self:center;opacity:0.7;"></span>
+        <span id="page-info" class="page-info"></span>
         <button id="next-page" class="btn-copy" onclick="changePage(1)" style="display:none;">Selanjutnya &raquo;</button>
       </div>
     </section>
@@ -422,11 +432,11 @@
 
   <!-- ===== FOOTER ===== -->
   <footer id="site-footer" style="display:none;">
-      <!-- Gold divider -->
-    <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:20px;">
-      <span style="width:60px;height:1px;background:linear-gradient(90deg,transparent,rgba(201,213,184,0.5));display:block;"></span>
-      <span style="font-size:12px;color:rgba(201,213,184,0.6);">✦</span>
-      <span style="width:60px;height:1px;background:linear-gradient(90deg,rgba(201,213,184,0.5),transparent);display:block;"></span>
+    <!-- Gold divider -->
+    <div class="footer-divider">
+      <span class="footer-divider-line"></span>
+      <span class="footer-divider-star">✦</span>
+      <span class="footer-divider-line"></span>
     </div>
 
     <div class="footer-label">Salam Bahagia dari</div>
@@ -434,15 +444,16 @@
     <div class="footer-tagline">21 · 08 · 2026</div>
 
     <!-- Gold divider -->
-    <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin:24px auto 16px;">
-      <span style="width:50px;height:1px;background:linear-gradient(90deg,transparent,rgba(201,213,184,0.4));display:block;"></span>
-      <span style="font-size:10px;color:rgba(201,213,184,0.5);">✦ ✦ ✦</span>
-      <span style="width:50px;height:1px;background:linear-gradient(90deg,rgba(201,213,184,0.4),transparent);display:block;"></span>
+    <div class="footer-divider footer-divider-bottom">
+      <span class="footer-divider-line"></span>
+      <span class="footer-divider-stars">✦ ✦ ✦</span>
+      <span class="footer-divider-line"></span>
     </div>
 
-    <p style="font-size:13px;color:rgba(255,255,255,0.55);line-height:1.9;">
+    <p class="footer-thanks">
       Atas doa &amp; ucapan Bapak/Ibu/Saudara/i,<br>kami mengucapkan terima kasih.
     </p>
+
     <div class="footer-credit">Made with ❤️ © 2026</div>
   </footer>
 

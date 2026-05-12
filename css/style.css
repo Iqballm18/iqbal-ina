@@ -1303,3 +1303,361 @@ footer .footer-credit {
   .cover-frame > span::before,
   .cover-frame > span::after { display: none; }
 }
+
+/* ============================================================
+   NEW UTILITY CLASSES — Replacing inline styles
+   ============================================================ */
+
+/* Hero section */
+.hero-section {
+  padding: 80px 20px 50px;
+  position: relative;
+  overflow: hidden;
+}
+.hero-floral-bg {
+  position: absolute;
+  top: 0;
+  right: -20px;
+  width: 180px;
+  opacity: 0.06;
+  pointer-events: none;
+}
+.hero-intro-text {
+  font-size: 14px;
+  opacity: 0.72;
+  line-height: 2;
+  max-width: 520px;
+  margin: 0 auto;
+}
+.divider-leaf-icon {
+  font-size: 14px;
+}
+
+/* Section utilities */
+.section-overflow-hidden {
+  position: relative;
+  overflow: hidden;
+}
+.section-subtitle {
+  font-size: 13px;
+  opacity: 0.7;
+  line-height: 1.9;
+  margin-bottom: 28px;
+}
+
+/* Countdown section extras */
+.countdown-date-title {
+  font-size: clamp(22px, 5vw, 32px);
+}
+.countdown-location {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 12px auto 32px;
+  opacity: 0.6;
+}
+.countdown-line {
+  width: 40px;
+  height: 1px;
+  background: rgba(201, 213, 184, 0.6);
+  display: block;
+}
+.countdown-location-text {
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--gold-light);
+}
+.countdown-calendar-wrap {
+  margin-top: 36px;
+}
+.btn-save-calendar {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 32px;
+  border-radius: 40px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(201, 213, 184, 0.4);
+  color: #fff;
+  text-decoration: none;
+  font-family: 'Jost', sans-serif;
+  font-size: 11px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  transition: background 0.3s, transform 0.3s;
+}
+.btn-save-calendar:hover {
+  background: rgba(255, 255, 255, 0.22);
+  transform: translateY(-2px);
+}
+
+/* Couple section extras */
+.couple-bg-ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 340px;
+  opacity: 0.04;
+  pointer-events: none;
+}
+.couple-location {
+  font-size: 11px;
+  color: var(--rose);
+}
+
+/* Gift section extras */
+.gift-watermark {
+  position: absolute;
+  bottom: -10px;
+  right: -20px;
+  width: 160px;
+  opacity: 0.05;
+  pointer-events: none;
+}
+
+/* Ucapan section extras */
+.ucapan-dots-bg {
+  position: absolute;
+  top: 20px;
+  left: -10px;
+  width: 120px;
+  opacity: 0.06;
+  pointer-events: none;
+}
+
+/* Footer extras */
+.footer-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.footer-divider-bottom {
+  margin: 24px auto 16px;
+  margin-bottom: 16px;
+}
+.footer-divider-line {
+  width: 60px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(201, 213, 184, 0.5));
+  display: block;
+}
+.footer-divider-line:last-child {
+  background: linear-gradient(90deg, rgba(201, 213, 184, 0.5), transparent);
+}
+.footer-divider-star {
+  font-size: 12px;
+  color: rgba(201, 213, 184, 0.6);
+}
+.footer-divider-stars {
+  font-size: 10px;
+  color: rgba(201, 213, 184, 0.5);
+}
+.footer-thanks {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.55);
+  line-height: 1.9;
+}
+.footer-share {
+  margin-top: 24px;
+}
+.btn-share-whatsapp {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 24px;
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #fff;
+  text-decoration: none;
+  font-family: 'Jost', sans-serif;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  transition: background 0.3s, transform 0.3s;
+}
+.btn-share-whatsapp:hover {
+  background: #25D366;
+  border-color: #25D366;
+  transform: translateY(-2px);
+}
+.btn-share-whatsapp svg {
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   ENHANCED RESPONSIVE — More breakpoints
+   ============================================================ */
+
+/* Tablets */
+@media (max-width: 768px) {
+  .couple-grid {
+    gap: 16px;
+  }
+  .couple-photo-wrapper {
+    width: 120px;
+  }
+  .couple-photo-placeholder {
+    width: 120px;
+    height: 120px;
+    font-size: 36px;
+  }
+  .couple-name {
+    font-size: 18px;
+  }
+  footer .footer-names {
+    font-size: 42px;
+  }
+  .event-card {
+    padding: 30px 24px;
+  }
+}
+
+/* Small phones */
+@media (max-width: 380px) {
+  .sticky-nav {
+    gap: 10px;
+    padding: 10px 12px;
+  }
+  .sticky-nav a {
+    font-size: 8px;
+    letter-spacing: 1.5px;
+  }
+  .countdown-boxes {
+    gap: 8px;
+  }
+  .countdown-box {
+    padding: 12px 10px;
+    min-width: 56px;
+  }
+  .countdown-number {
+    font-size: 32px;
+  }
+  .btn-open {
+    padding: 12px 36px;
+    font-size: 10px;
+  }
+  .cover-names {
+    font-size: clamp(42px, 11vw, 70px);
+  }
+  .ucapan-form {
+    padding: 24px 18px;
+  }
+  .btn-status {
+    font-size: 10px;
+    padding: 8px 4px;
+  }
+  .music-pill.expanded {
+    max-width: 180px;
+  }
+  .music-song-title {
+    font-size: 10px;
+  }
+}
+
+/* Focus styles for accessibility */
+.btn-open:focus-visible,
+.btn-event:focus-visible,
+.btn-submit:focus-visible,
+.btn-copy:focus-visible,
+.btn-status:focus-visible,
+.btn-ig:focus-visible,
+.btn-save-calendar:focus-visible,
+.btn-share-whatsapp:focus-visible,
+#music-control:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+
+.form-group input:focus-visible,
+.form-group textarea:focus-visible,
+.gift-select:focus-visible {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(201, 169, 110, 0.2);
+}
+
+/* Reduced motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .petal { display: none; }
+  .cover-leaf-top,
+  .cover-leaf-bottom { animation: none; }
+  .couple-photo-wrapper::before { animation: none; }
+  .couple-amp { animation: none; }
+}
+
+/* Loading skeleton for messages */
+.messages-skeleton {
+  display: flex;
+  gap: 16px;
+  padding: 20px 0;
+  animation: skeletonPulse 1.5s ease-in-out infinite;
+}
+.messages-skeleton .skeleton-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(90deg, #e8e4de 25%, #f5f1eb 50%, #e8e4de 75%);
+  background-size: 200% 100%;
+  animation: skeletonShimmer 1.5s ease-in-out infinite;
+}
+.messages-skeleton .skeleton-lines {
+  flex: 1;
+}
+.messages-skeleton .skeleton-line {
+  height: 12px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #e8e4de 25%, #f5f1eb 50%, #e8e4de 75%);
+  background-size: 200% 100%;
+  animation: skeletonShimmer 1.5s ease-in-out infinite;
+  margin-bottom: 8px;
+}
+.messages-skeleton .skeleton-line:first-child { width: 40%; }
+.messages-skeleton .skeleton-line:last-child { width: 80%; }
+
+@keyframes skeletonShimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+@keyframes skeletonPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+/* Messages list scroll */
+.messages-list {
+  max-height: 520px;
+  overflow-y: auto;
+}
+
+/* Pagination */
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+.page-info {
+  font-size: 13px;
+  align-self: center;
+  opacity: 0.7;
+}
+
+/* Cover place text */
+.cover-place {
+  font-size: 11px;
+  color: var(--text);
+  opacity: 0.45;
+  margin-top: 4px;
+  letter-spacing: 1px;
+  position: relative;
+  z-index: 3;
+}

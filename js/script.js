@@ -406,7 +406,7 @@ async function kirimUcapan() {
 async function loadMessages() {
   const list = document.getElementById('messages-list');
   if (!list) return;
-  list.innerHTML = '<p style="text-align:center;font-size:12px;opacity:0.6;padding:20px 0;">Memuat pesan...</p>';
+  showMessagesSkeleton(list);
 
   try {
     const res  = await fetch(SCRIPT_URL);
@@ -513,36 +513,25 @@ function gantiNamaTamu() {
 }
 
 /* ============================================================
-   ACTIVE NAV HIGHLIGHT
+   ACTIVE NAV HIGHLIGHT — single observer for all sections
    ============================================================ */
 function initActiveNav() {
   const sections = document.querySelectorAll('section[id], #countdown-section');
   const navLinks = document.querySelectorAll('.sticky-nav a');
 
-  new IntersectionObserver(entries => {
+  if (!sections.length) return;
+
+  const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
       if (!entry.isIntersecting) return;
       const id = entry.target.id;
       navLinks.forEach(a => {
-        const match = a.getAttribute('href') === `#${id}`;
-        a.classList.toggle('active-nav', match);
+        a.classList.toggle('active-nav', a.getAttribute('href') === `#${id}`);
       });
     });
-  }, { threshold: 0.35 }).observe(
-    ...Array.from(sections).length ? sections : [document.body]
-  );
+  }, { threshold: 0.35 });
 
-  // Separate observer for each section
-  sections.forEach(s => {
-    new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (!entry.isIntersecting) return;
-        navLinks.forEach(a => {
-          a.classList.toggle('active-nav', a.getAttribute('href') === `#${entry.target.id}`);
-        });
-      });
-    }, { threshold: 0.35 }).observe(s);
-  });
+  sections.forEach(s => observer.observe(s));
 }
 
 /* ============================================================
@@ -554,10 +543,14 @@ function escapeHtml(str = '') {
     .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-function shakeEl(el) {
+/* Shake animation style — injected once */
+(function() {
   const s = document.createElement('style');
   s.textContent = `@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(7px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}`;
   document.head.appendChild(s);
+})();
+
+function shakeEl(el) {
   el.style.animation = 'shake 0.4s ease';
   el.addEventListener('animationend', () => el.style.animation = '', { once: true });
 }
@@ -580,4 +573,33 @@ function copyText(elementId, btn) {
 
 function changePage(dir) {
   // placeholder for pagination if needed
+}
+
+/* ============================================================
+   LIGHTBOX — KEYBOARD SUPPORT (Escape to close)
+   ============================================================ */
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    const lb = document.getElementById('lightbox');
+    if (lb && lb.classList.contains('open')) {
+      closeLightbox();
+    }
+  }
+});
+
+/* ============================================================
+   LOADING SKELETON FOR MESSAGES
+   ============================================================ */
+function showMessagesSkeleton(container) {
+  let html = '';
+  for (let i = 0; i < 3; i++) {
+    html += `<div class="messages-skeleton">
+      <div class="skeleton-circle"></div>
+      <div class="skeleton-lines">
+        <div class="skeleton-line"></div>
+        <div class="skeleton-line"></div>
+      </div>
+    </div>`;
+  }
+  container.innerHTML = html;
 }
