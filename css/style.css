@@ -500,7 +500,8 @@ section {
   font-size: 11px;
   letter-spacing: 2px;
   color: var(--gold-dark);
-  text-align: right;
+  text-align: center;
+  position: relative;
 }
 
 /* ============================================================
