@@ -27,6 +27,9 @@ function openInvitation(e) {
     const footer = document.getElementById('site-footer');
     if (footer) footer.style.display = 'block';
 
+    // Launch confetti celebration
+    launchConfetti();
+
     // Show music player pill
     showMusicPlayer();
 
@@ -84,8 +87,43 @@ const FADE_DURATION = 2200;   // ms — how long the full fade takes
 let   fadeInterval  = null;
 
 /* ============================================================
-   MUSIC PLAYER — INSTANT PLAY/PAUSE
+   PREMIUM MUSIC PLAYER — INSTANT PLAY/PAUSE
    ============================================================ */
+
+/* Playlist data */
+const playlist = [
+  { src: 'media/Brian McKnight  - Marry Your Daughter.m4a', title: 'Marry Your Daughter', artist: 'Brian McKnight' },
+  { src: 'media/Sheila on 7 - Hari Bersamanya.m4a', title: 'Hari Bersamanya', artist: 'Sheila on 7' },
+  { src: "media/Paul Partohap - THANK YOU 4 LOVIN' ME.m4a", title: "Thank You 4 Lovin' Me", artist: 'Paul Partohap' },
+  { src: 'media/Barasuara - Terbuang Dalam Waktu.m4a', title: 'Terbuang Dalam Waktu', artist: 'Barasuara' }
+];
+let currentTrack = 0;
+
+function loadTrack(index) {
+  const audio = document.getElementById('wedding-audio');
+  if (!audio) return;
+  currentTrack = index;
+  const track = playlist[currentTrack];
+  audio.src = track.src;
+
+  const titleEl = document.getElementById('music-song-title');
+  const artistEl = document.getElementById('music-song-artist');
+  if (titleEl) titleEl.textContent = track.title;
+  if (artistEl) artistEl.textContent = track.artist;
+}
+
+function nextTrack(e) {
+  if (e) e.stopPropagation();
+  const audio = document.getElementById('wedding-audio');
+  const wasPlaying = audio && !audio.paused;
+
+  currentTrack = (currentTrack + 1) % playlist.length;
+  loadTrack(currentTrack);
+
+  if (wasPlaying) {
+    audio.play().then(() => setPillState(true));
+  }
+}
 
 function musicFadeIn() {
   const audio = document.getElementById('wedding-audio');
@@ -153,14 +191,20 @@ function showMusicPlayer() {
   const player = document.querySelector('.music-player');
   if (!player) return;
   player.classList.add('visible');
-  player.style.transform = 'translateY(80px)';
+  player.style.transform = 'translateZ(0) translateY(80px)';
   player.style.opacity   = '0';
   player.style.transition = 'transform 0.6s cubic-bezier(.34,1.3,.64,1), opacity 0.5s ease';
 
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
-      player.style.transform = 'translateY(0)';
+      player.style.transform = 'translateZ(0) translateY(0)';
       player.style.opacity   = '1';
+      // Remove inline transition after animation completes to prevent scroll jitter
+      setTimeout(() => {
+        player.style.transition = '';
+        player.style.transform = '';
+        player.style.opacity = '';
+      }, 700);
     });
   });
 
@@ -637,6 +681,38 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ============================================================
+   MOBILE SCROLL STABILITY — prevent fixed elements from jittering
+   ============================================================ */
+(function() {
+  let scrollTimeout;
+  const fixedEls = [];
+
+  function getFixedEls() {
+    if (fixedEls.length) return fixedEls;
+    const player = document.querySelector('.music-player');
+    const nav = document.getElementById('side-nav');
+    if (player) fixedEls.push(player);
+    if (nav) fixedEls.push(nav);
+    return fixedEls;
+  }
+
+  window.addEventListener('scroll', function() {
+    const els = getFixedEls();
+    els.forEach(el => {
+      if (!el.style.transition) return;
+      el.style.transition = 'none';
+    });
+
+    clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(() => {
+      els.forEach(el => {
+        el.style.transition = '';
+      });
+    }, 150);
+  }, { passive: true });
+})();
+
+/* ============================================================
    LOADING SKELETON FOR MESSAGES
    ============================================================ */
 function showMessagesSkeleton(container) {
@@ -651,4 +727,70 @@ function showMessagesSkeleton(container) {
     </div>`;
   }
   container.innerHTML = html;
+}
+
+/* ============================================================
+   CONFETTI ANIMATION — triggered when opening invitation
+   ============================================================ */
+function launchConfetti() {
+  const canvas = document.getElementById('confetti-canvas');
+  if (!canvas) return;
+
+  canvas.style.display = 'block';
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const colors = ['#c9a96e', '#e8c9b8', '#c9826b', '#a5b898', '#6b7c5e', '#e8d5a3', '#fff'];
+  const confettiCount = 120;
+  const confetti = [];
+
+  for (let i = 0; i < confettiCount; i++) {
+    confetti.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height - canvas.height,
+      w: Math.random() * 8 + 4,
+      h: Math.random() * 4 + 2,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      speed: Math.random() * 3 + 2,
+      angle: Math.random() * Math.PI * 2,
+      spin: (Math.random() - 0.5) * 0.15,
+      drift: (Math.random() - 0.5) * 1.5,
+      opacity: 1
+    });
+  }
+
+  let frame = 0;
+  const maxFrames = 180; // ~3 seconds at 60fps
+
+  function animate() {
+    frame++;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    const fadeStart = maxFrames * 0.65;
+    const globalOpacity = frame > fadeStart ? 1 - (frame - fadeStart) / (maxFrames - fadeStart) : 1;
+
+    confetti.forEach(c => {
+      c.y += c.speed;
+      c.x += c.drift + Math.sin(c.angle) * 0.5;
+      c.angle += c.spin;
+
+      ctx.save();
+      ctx.translate(c.x, c.y);
+      ctx.rotate(c.angle);
+      ctx.globalAlpha = globalOpacity * c.opacity;
+      ctx.fillStyle = c.color;
+      ctx.fillRect(-c.w / 2, -c.h / 2, c.w, c.h);
+      ctx.restore();
+    });
+
+    if (frame < maxFrames) {
+      requestAnimationFrame(animate);
+    } else {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      canvas.style.display = 'none';
+    }
+  }
+
+  requestAnimationFrame(animate);
 }

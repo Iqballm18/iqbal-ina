@@ -1142,6 +1142,9 @@ footer .footer-credit {
   align-items: center;
   gap: 0;
   filter: drop-shadow(0 4px 18px rgba(0,0,0,0.22));
+  transform: translateZ(0);       /* force GPU layer — prevents jitter */
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 .music-player.visible { display: flex; }
 
@@ -1670,11 +1673,13 @@ footer .footer-credit {
   position: fixed;
   right: 14px;
   top: 50%;
-  transform: translateY(-50%);
+  transform: translateY(-50%) translateZ(0); /* GPU layer — prevents mobile jitter */
   z-index: 200;
   flex-direction: column;
   align-items: center;
   gap: 12px;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .side-nav-dot {
@@ -1832,4 +1837,133 @@ footer .footer-credit {
 .input-nama-tamu:focus {
   border-color: var(--gold);
   box-shadow: 0 0 0 3px rgba(201, 169, 110, 0.15);
+}
+
+/* ============================================================
+   HERO ORNAMENT — decorative SVG under "Iqbal & Ina" title
+   ============================================================ */
+.hero-ornament {
+  margin: 0 auto 8px;
+  display: flex;
+  justify-content: center;
+}
+.hero-ornament svg {
+  animation: ornamentFade 3s ease-in-out infinite alternate;
+}
+@keyframes ornamentFade {
+  0% { opacity: 0.7; transform: scaleX(0.95); }
+  100% { opacity: 1; transform: scaleX(1); }
+}
+
+/* ============================================================
+   EMBEDDED GOOGLE MAPS
+   ============================================================ */
+.event-map {
+  margin-top: 32px;
+}
+.event-map-wrapper {
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(201, 169, 110, 0.2);
+}
+.event-map-wrapper iframe {
+  display: block;
+  width: 100%;
+  border-radius: 16px;
+}
+.btn-maps-full {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 14px;
+  padding: 10px 24px;
+  border-radius: 30px;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  text-decoration: none;
+  background: var(--green);
+  color: #fff;
+  font-family: 'Jost', sans-serif;
+  transition: all 0.3s;
+}
+.btn-maps-full:hover {
+  background: var(--rose);
+  transform: translateY(-2px);
+}
+
+/* ============================================================
+   MUSIC NEXT BUTTON
+   ============================================================ */
+.music-next-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: transparent;
+  border: 1px solid rgba(107, 124, 94, 0.3);
+  color: var(--green);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  margin-left: 8px;
+  transition: all 0.3s ease;
+  opacity: 0;
+}
+.music-pill.expanded .music-next-btn {
+  opacity: 1;
+}
+.music-next-btn:hover {
+  background: var(--green);
+  color: #fff;
+  border-color: var(--green);
+}
+
+/* ============================================================
+   CONFETTI CANVAS
+   ============================================================ */
+#confetti-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9999;
+  display: none;
+}
+
+/* ============================================================
+   MOBILE FIXED ELEMENT STABILITY
+   Prevents jumping when mobile browser address bar shows/hides
+   ============================================================ */
+@supports (height: 100dvh) {
+  .side-nav {
+    top: 50dvh;
+  }
+}
+
+@media (max-width: 768px) {
+  .music-player {
+    bottom: 18px;
+    right: 14px;
+    /* Prevent layout shift from address bar */
+    position: fixed;
+    contain: layout style;
+  }
+  .side-nav {
+    right: 10px;
+    contain: layout style;
+  }
+  /* Smaller dots on mobile to reduce visual noise */
+  .side-nav-dot {
+    width: 34px;
+    height: 34px;
+  }
+  .side-nav-toggle {
+    width: 26px;
+    height: 26px;
+  }
 }

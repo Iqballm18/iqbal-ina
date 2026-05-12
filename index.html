@@ -14,6 +14,10 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="theme-color" content="#6b7c5e">
 
+  <!-- Favicon — Wedding icon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='22' cy='36' r='14' fill='none' stroke='%23c9a96e' stroke-width='3'/%3E%3Ccircle cx='42' cy='36' r='14' fill='none' stroke='%23c9826b' stroke-width='3'/%3E%3Cpath d='M32 10 L34 18 L30 18 Z' fill='%23c9a96e'/%3E%3Ccircle cx='32' cy='8' r='3' fill='%23c9a96e'/%3E%3C/svg%3E">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='22' cy='36' r='14' fill='none' stroke='%23c9a96e' stroke-width='3'/%3E%3Ccircle cx='42' cy='36' r='14' fill='none' stroke='%23c9826b' stroke-width='3'/%3E%3Cpath d='M32 10 L34 18 L30 18 Z' fill='%23c9a96e'/%3E%3Ccircle cx='32' cy='8' r='3' fill='%23c9a96e'/%3E%3C/svg%3E">
+
   <!-- Preconnect for faster font loading -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -111,9 +115,12 @@
         <span id="music-icon">♪</span>
       </button>
       <div class="music-info">
-        <div class="music-song-title">Marry Your Daughter (Piano Version)</div>
-        <div class="music-song-artist">Brian McKnight</div>
+        <div class="music-song-title" id="music-song-title">Marry Your Daughter</div>
+        <div class="music-song-artist" id="music-song-artist">Brian McKnight</div>
       </div>
+      <button id="music-next" class="music-next-btn" onclick="nextTrack(event)" aria-label="Lagu berikutnya">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M5 4l10 8-10 8V4zm11 0h2v16h-2V4z"/></svg>
+      </button>
       <div class="music-wave">
         <div class="music-bar"></div>
         <div class="music-bar"></div>
@@ -126,8 +133,11 @@
 
   <!-- Audio element -->
   <audio id="wedding-audio" loop>
-    <source src="media/Marry Your Daughter - Brian McKnight Piano Cover by Riyandi Kusuma (mp3cut.net).m4a" type="audio/mp4">
+    <source src="media/Brian McKnight  - Marry Your Daughter.m4a" type="audio/mp4">
   </audio>
+
+  <!-- Confetti canvas -->
+  <canvas id="confetti-canvas" aria-hidden="true"></canvas>
 
   <!-- ===================== MAIN CONTENT ===================== -->
   <div id="main-content">
@@ -175,6 +185,22 @@
       </svg>
 
       <div class="section-label">We're Getting Married</div>
+
+      <!-- Decorative ornament above title -->
+      <div class="hero-ornament reveal d1">
+        <svg width="200" height="40" viewBox="0 0 200 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M20 20 Q50 5 100 20 Q150 35 180 20" stroke="var(--gold)" stroke-width="0.8" fill="none" opacity="0.6"/>
+          <path d="M20 20 Q50 35 100 20 Q150 5 180 20" stroke="var(--gold)" stroke-width="0.8" fill="none" opacity="0.6"/>
+          <circle cx="100" cy="20" r="3" fill="var(--gold)" opacity="0.7"/>
+          <circle cx="60" cy="20" r="1.5" fill="var(--gold)" opacity="0.5"/>
+          <circle cx="140" cy="20" r="1.5" fill="var(--gold)" opacity="0.5"/>
+          <circle cx="30" cy="20" r="1" fill="var(--gold)" opacity="0.35"/>
+          <circle cx="170" cy="20" r="1" fill="var(--gold)" opacity="0.35"/>
+          <path d="M90 16 Q95 10 100 16 Q105 10 110 16" stroke="var(--rose)" stroke-width="0.6" fill="none" opacity="0.5"/>
+          <path d="M90 24 Q95 30 100 24 Q105 30 110 24" stroke="var(--rose)" stroke-width="0.6" fill="none" opacity="0.5"/>
+        </svg>
+      </div>
+
       <div class="section-title">Iqbal &amp; Ina</div>
 
       <div class="divider-leaf">
@@ -312,9 +338,6 @@
         <div class="event-time">Pukul 08:00 – 09:00 WIB</div>
         <div class="event-venue">Rumah Mempelai Wanita</div>
         <div class="event-address">Dsn. Grogol RT/RW 006/006<br>Ds. Grogol Kec. Diwek Kab. Jombang</div>
-        <a href="https://maps.app.goo.gl/fPWYK652SdjCLdi89" target="_blank" class="btn-event btn-calendar">
-          📍 Lihat Peta
-        </a>
       </div>
 
       <!-- Gold separator -->
@@ -330,8 +353,24 @@
         <div class="event-time">Pukul 09:00 – Selesai WIB</div>
         <div class="event-venue">Rumah Mempelai Wanita</div>
         <div class="event-address">Dsn. Grogol RT/RW 006/006<br>Ds. Grogol Kec. Diwek Kab. Jombang</div>
-        <a href="https://maps.app.goo.gl/fPWYK652SdjCLdi89" target="_blank" class="btn-event btn-calendar">
-          📍 Lihat Peta
+      </div>
+
+      <!-- Embedded Google Maps -->
+      <div class="event-map reveal">
+        <div class="event-map-wrapper">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3955.5!2d112.23!3d-7.58!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zN8KwMzQnNDguMCJTIDExMsKwMTMnNDguMCJF!5e0!3m2!1sid!2sid!4v1"
+            width="100%"
+            height="280"
+            style="border:0;"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            title="Lokasi acara pernikahan">
+          </iframe>
+        </div>
+        <a href="https://maps.app.goo.gl/fPWYK652SdjCLdi89" target="_blank" rel="noopener noreferrer" class="btn-event btn-maps-full">
+          🗺️ Buka di Google Maps
         </a>
       </div>
     </section>
