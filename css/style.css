@@ -1142,9 +1142,10 @@ footer .footer-credit {
   align-items: center;
   gap: 0;
   filter: drop-shadow(0 4px 18px rgba(0,0,0,0.22));
-  transform: translateZ(0);       /* force GPU layer — prevents jitter */
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
+  /* Prevent mobile viewport resize jitter */
+  will-change: transform;
+  -webkit-transform: translate3d(0,0,0);
+  transform: translate3d(0,0,0);
 }
 .music-player.visible { display: flex; }
 
@@ -1159,8 +1160,7 @@ footer .footer-credit {
   overflow: hidden;
   max-width: 44px;          /* collapsed: only shows button */
   transition: max-width 0.45s cubic-bezier(.34,1.1,.64,1),
-              padding 0.35s ease,
-              box-shadow 0.3s;
+              padding 0.35s ease;
   box-shadow: 0 4px 20px rgba(0,0,0,0.14);
 }
 .music-pill.expanded {
@@ -1673,13 +1673,15 @@ footer .footer-credit {
   position: fixed;
   right: 14px;
   top: 50%;
-  transform: translateY(-50%) translateZ(0); /* GPU layer — prevents mobile jitter */
+  transform: translateY(-50%);
   z-index: 200;
   flex-direction: column;
   align-items: center;
   gap: 12px;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
+  /* Prevent mobile viewport resize jitter */
+  will-change: transform;
+  -webkit-transform: translateY(-50%) translate3d(0,0,0);
+  transform: translateY(-50%) translate3d(0,0,0);
 }
 
 .side-nav-dot {
@@ -1693,17 +1695,15 @@ footer .footer-credit {
   justify-content: center;
   color: var(--green);
   text-decoration: none;
-  transition: all 0.3s ease;
+  transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
   position: relative;
-  backdrop-filter: blur(8px);
 }
 
 .side-nav-dot:hover {
   background: var(--green);
   color: #fff;
   border-color: var(--green);
-  transform: scale(1.15);
   box-shadow: 0 4px 16px rgba(107, 124, 94, 0.35);
 }
 
@@ -1756,17 +1756,16 @@ footer .footer-credit {
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  background: rgba(250, 246, 240, 0.85);
+  background: rgba(250, 246, 240, 0.92);
   border: 1px solid rgba(201, 169, 110, 0.25);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   color: var(--text);
-  transition: all 0.3s ease;
+  transition: background 0.3s ease, border-color 0.3s ease;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   margin-bottom: 4px;
-  backdrop-filter: blur(8px);
 }
 .side-nav-toggle:hover {
   background: var(--cream);
@@ -1786,9 +1785,9 @@ footer .footer-credit {
   transform: rotate(180deg);
 }
 
-/* Smooth transition for dots */
+/* Smooth transition for dots — only opacity & transform for collapse */
 .side-nav .side-nav-dot {
-  transition: all 0.3s cubic-bezier(.34, 1.2, .64, 1);
+  transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, opacity 0.3s cubic-bezier(.34, 1.2, .64, 1), transform 0.3s cubic-bezier(.34, 1.2, .64, 1);
 }
 .side-nav.collapsed .side-nav-dot:nth-child(2) { transition-delay: 0.02s; }
 .side-nav.collapsed .side-nav-dot:nth-child(3) { transition-delay: 0.04s; }
@@ -1941,7 +1940,9 @@ footer .footer-credit {
    ============================================================ */
 @supports (height: 100dvh) {
   .side-nav {
-    top: 50dvh;
+    /* Use dvh to avoid jump when mobile address bar shows/hides */
+    top: calc(50dvh);
+    transform: translateY(-50%) translate3d(0,0,0);
   }
 }
 
@@ -1949,13 +1950,9 @@ footer .footer-credit {
   .music-player {
     bottom: 18px;
     right: 14px;
-    /* Prevent layout shift from address bar */
-    position: fixed;
-    contain: layout style;
   }
   .side-nav {
     right: 10px;
-    contain: layout style;
   }
   /* Smaller dots on mobile to reduce visual noise */
   .side-nav-dot {

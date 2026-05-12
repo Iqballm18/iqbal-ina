@@ -682,33 +682,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
 /* ============================================================
    MOBILE SCROLL STABILITY — prevent fixed elements from jittering
+   On mobile, the browser address bar showing/hiding causes viewport
+   resize which triggers reflow on fixed elements. We counteract this
+   by using a resize observer instead of scroll listener.
    ============================================================ */
 (function() {
-  let scrollTimeout;
-  const fixedEls = [];
+  // Only apply on mobile/touch devices
+  if (!('ontouchstart' in window)) return;
 
-  function getFixedEls() {
-    if (fixedEls.length) return fixedEls;
-    const player = document.querySelector('.music-player');
-    const nav = document.getElementById('side-nav');
-    if (player) fixedEls.push(player);
-    if (nav) fixedEls.push(nav);
-    return fixedEls;
-  }
+  let lastHeight = window.innerHeight;
 
-  window.addEventListener('scroll', function() {
-    const els = getFixedEls();
-    els.forEach(el => {
-      if (!el.style.transition) return;
-      el.style.transition = 'none';
-    });
+  // Listen for viewport resize (address bar show/hide)
+  window.addEventListener('resize', function() {
+    const newHeight = window.innerHeight;
+    const diff = Math.abs(newHeight - lastHeight);
 
-    clearTimeout(scrollTimeout);
-    scrollTimeout = setTimeout(() => {
-      els.forEach(el => {
-        el.style.transition = '';
-      });
-    }, 150);
+    // If height change is small (< 150px), it's likely the address bar
+    // In that case, do nothing — let CSS handle it with translate3d
+    if (diff > 0 && diff < 150) {
+      // Temporarily lock the side-nav position to prevent visual jump
+      const sideNav = document.getElementById('side-nav');
+      if (sideNav) {
+        sideNav.style.transition = 'none';
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            sideNav.style.transition = '';
+          });
+        });
+      }
+    }
+    lastHeight = newHeight;
   }, { passive: true });
 })();
 
