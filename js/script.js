@@ -116,13 +116,13 @@ function musicFadeOut(callback) {
 
   clearInterval(fadeInterval);
   const startVol = audio.volume;
-  const steps    = 50;
+  const steps    = 1;
   const step     = startVol / steps;
   let   vol      = startVol;
 
   fadeInterval = setInterval(() => {
     vol = Math.max(vol - step, 0);
-    audio.volume = parseFloat(vol.toFixed(4));
+    audio.volume = parseFloat(vol.toFixed(3));
     if (vol <= 0) {
       clearInterval(fadeInterval);
       audio.pause();
