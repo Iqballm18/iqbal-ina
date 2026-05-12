@@ -28,17 +28,14 @@ html, body {
 }
 
 body {
-  overflow-x: hidden;
-  position: relative;
-}
-
-body {
   font-family: 'Jost', sans-serif;
   background: var(--cream);
   color: var(--text);
   overflow-x: hidden;
+  overflow-y: scroll; /* force scrollbar always visible — prevents layout shift */
   margin: 0;
   padding: 0;
+  position: relative;
 }
 
 /* ============================================================
@@ -101,7 +98,7 @@ body {
 #main-content {
   display: none; 
   flex-direction: column;
-  min-height: 100vh;
+  /* removed min-height: 100vh — was causing footer to jump/shift */
 }
 
 /* Subtle gold vignette border on cover */
@@ -320,9 +317,11 @@ body {
    ============================================================ */
 .reveal {
   opacity: 0;
-  transform: translateY(50px);
+  transform: translateY(30px); /* reduced from 50px — less jump */
   transition: opacity 0.78s cubic-bezier(.22,.68,0,1.15),
               transform 0.78s cubic-bezier(.22,.68,0,1.15);
+  will-change: opacity, transform; /* hint browser — prevents repaint shake */
+  backface-visibility: hidden;    /* GPU layer — eliminates sub-pixel jitter */
 }
 .reveal.revealed { opacity: 1; transform: translateY(0); }
 
@@ -337,6 +336,8 @@ body {
   opacity: 0;
   transform: translateX(-60px);
   transition: opacity 0.72s ease, transform 0.72s ease;
+  will-change: opacity, transform;
+  backface-visibility: hidden;
 }
 .reveal-left.revealed { opacity: 1; transform: translateX(0); }
 
@@ -344,6 +345,8 @@ body {
   opacity: 0;
   transform: translateX(60px);
   transition: opacity 0.72s ease, transform 0.72s ease;
+  will-change: opacity, transform;
+  backface-visibility: hidden;
 }
 .reveal-right.revealed { opacity: 1; transform: translateX(0); }
 
@@ -351,6 +354,8 @@ body {
   opacity: 0;
   transform: scale(0.80);
   transition: opacity 0.6s ease, transform 0.6s cubic-bezier(.34,1.56,.64,1);
+  will-change: opacity, transform;
+  backface-visibility: hidden;
 }
 .reveal-scale.revealed { opacity: 1; transform: scale(1); }
 
@@ -442,6 +447,8 @@ section {
   opacity: 0;
   transform: scaleX(0.4);
   transition: opacity 0.7s ease 0.3s, transform 0.7s ease 0.3s;
+  will-change: opacity, transform;
+  backface-visibility: hidden;
 }
 .divider-leaf.revealed { opacity: 1; transform: scaleX(1); }
 .divider-leaf::before, .divider-leaf::after {
@@ -561,6 +568,8 @@ section {
   color: #fff;
   line-height: 1;
   display: inline-block;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
 }
 .countdown-number.flip {
   animation: digitFlip 0.45s ease;
@@ -1032,8 +1041,11 @@ footer {
   padding: 80px 24px 60px;
   position: relative; 
   overflow: hidden;
-  margin-top: auto; /* Menghilangkan celah pixel antar elemen */
+  margin-top: 0;       /* removed auto — was causing footer jump in flex layout */
   width: 100%;
+  transform: translateZ(0);  /* force GPU compositing layer — eliminates bottom shake */
+  backface-visibility: hidden;
+  isolation: isolate;
 }
 
 footer::before {
@@ -1280,13 +1292,10 @@ footer .footer-credit {
 #pagination-controls { display: flex; justify-content: center; gap: 15px; margin-top: 20px; }
 
 /* ============================================================
-   SECTION WASH
+   SECTION WASH — use opacity only, never background (avoids reflow)
    ============================================================ */
-section.in-view { animation: sectionWash 0.7s ease forwards; }
-@keyframes sectionWash {
-  from { background: rgba(201,169,110,0.04); }
-  to   { background: transparent; }
-}
+section.in-view { /* intentionally empty — removed sectionWash background animation
+                     which was causing layout reflow and shake on scroll */ }
 
 /* ============================================================
    RESPONSIVE
