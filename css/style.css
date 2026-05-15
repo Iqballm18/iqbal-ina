@@ -2088,3 +2088,21 @@ footer .footer-credit {
     font-size: 11px;
   }
 }
+
+/* ============================================================
+   CLEANUP — replacing remaining inline styles
+   ============================================================ */
+.cover-guest-input {
+  display: none;
+}
+.footer-hidden {
+  display: none;
+}
+.gold-rule-diamond-sm {
+  width: 5px;
+  height: 5px;
+  opacity: 0.5;
+}
+.form-group-left {
+  text-align: left;
+}

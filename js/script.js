@@ -25,7 +25,7 @@ function openInvitation(e) {
     main.classList.add('open');
 
     const footer = document.getElementById('site-footer');
-    if (footer) footer.style.display = 'block';
+    if (footer) footer.classList.remove('footer-hidden');
 
     // Launch confetti celebration
     launchConfetti();

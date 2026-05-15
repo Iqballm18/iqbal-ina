@@ -91,7 +91,7 @@
     <div class="cover-place fade-up delay-2">di Tempat</div>
 
     <!-- Input nama tamu jika tidak ada parameter ?to= -->
-    <div class="cover-guest-input fade-up delay-2" id="cover-guest-input" style="display:none;">
+    <div class="cover-guest-input fade-up delay-2" id="cover-guest-input">
       <input type="text" id="input-nama-tamu" class="input-nama-tamu" placeholder="Masukkan nama Anda" aria-label="Nama tamu">
     </div>
 
@@ -132,9 +132,7 @@
   </div>
 
   <!-- Audio element -->
-  <audio id="wedding-audio" loop>
-    <source src="media/Brian McKnight  - Marry Your Daughter.m4a" type="audio/mp4">
-  </audio>
+  <audio id="wedding-audio" loop src="media/Brian McKnight  - Marry Your Daughter.m4a"></audio>
 
   <!-- Confetti canvas -->
   <canvas id="confetti-canvas" aria-hidden="true"></canvas>
@@ -342,7 +340,7 @@
       <!-- Gold separator -->
       <div class="gold-rule reveal">
         <div class="gold-rule-diamond"></div>
-        <div class="gold-rule-diamond" style="width:5px;height:5px;opacity:0.5;"></div>
+        <div class="gold-rule-diamond gold-rule-diamond-sm"></div>
         <div class="gold-rule-diamond"></div>
       </div>
 
@@ -397,7 +395,7 @@
 
       <div class="gift-container">
         <div class="gift-card reveal">
-          <div class="form-group" style="text-align:left;">
+          <div class="form-group form-group-left">
             <label>Pilih Metode</label>
             <select id="gift-selector" onchange="updateGiftDisplay()" class="gift-select">
               <option value="bri">🏦 Bank BRI</option>
@@ -495,7 +493,7 @@
   </div><!-- end main-content -->
 
   <!-- ===== FOOTER ===== -->
-  <footer id="site-footer" style="display:none;">
+  <footer id="site-footer" class="footer-hidden">
     <!-- Gold divider -->
     <div class="footer-divider">
       <span class="footer-divider-line"></span>
