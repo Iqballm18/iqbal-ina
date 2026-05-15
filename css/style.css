@@ -1964,3 +1964,127 @@ footer .footer-credit {
     height: 26px;
   }
 }
+
+/* ============================================================
+   MOBILE FONT SIZE BOOST — improve readability on small screens
+   ============================================================ */
+@media (max-width: 768px) {
+  /* Section labels */
+  .section-label {
+    font-size: 11px;
+  }
+
+  /* Body text & descriptions */
+  .hero-intro-text,
+  .section-subtitle,
+  .couple-parents,
+  .event-address {
+    font-size: 14px;
+  }
+
+  /* Event card text */
+  .event-date {
+    font-size: 14px;
+  }
+  .event-time {
+    font-size: 14px;
+  }
+
+  /* Countdown */
+  .countdown-label {
+    font-size: 10px;
+  }
+  .countdown-location-text {
+    font-size: 11px;
+  }
+
+  /* Form elements */
+  .form-group label {
+    font-size: 11px;
+  }
+  .btn-status {
+    font-size: 13px;
+  }
+  .btn-submit {
+    font-size: 12px;
+  }
+
+  /* Buttons */
+  .btn-open {
+    font-size: 12px;
+  }
+  .btn-event {
+    font-size: 11px;
+  }
+  .btn-save-calendar {
+    font-size: 12px;
+  }
+  .btn-copy {
+    font-size: 12px;
+  }
+
+  /* Cover text */
+  .cover-label {
+    font-size: 12px;
+  }
+  .cover-to {
+    font-size: 12px;
+  }
+  .cover-date-badge {
+    font-size: 12px;
+  }
+  .cover-place {
+    font-size: 12px;
+  }
+
+  /* Gift section */
+  .gift-select {
+    font-size: 14px;
+  }
+  .account-holder {
+    font-size: 12px;
+  }
+  .bank-name {
+    font-size: 14px;
+  }
+
+  /* Messages */
+  .message-text {
+    font-size: 14px;
+  }
+  .message-name {
+    font-size: 17px;
+  }
+  .message-status {
+    font-size: 11px;
+  }
+
+  /* Quran quote */
+  .quran-quote p {
+    font-size: 15px;
+  }
+  .quran-surah {
+    font-size: 12px;
+  }
+
+  /* Footer */
+  .footer-label {
+    font-size: 11px;
+  }
+  .footer-thanks {
+    font-size: 14px;
+  }
+
+  /* Couple */
+  .couple-location {
+    font-size: 12px;
+  }
+  .btn-ig {
+    font-size: 13px;
+  }
+
+  /* Nav tooltip */
+  .side-nav-dot::before {
+    font-size: 11px;
+  }
+}
