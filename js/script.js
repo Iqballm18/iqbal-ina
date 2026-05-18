@@ -12,6 +12,13 @@ function openInvitation(e) {
   // Ambil nama tamu dari input (jika diisi manual)
   getGuestNameFromInput();
 
+  // Button loading feedback
+  const btn = document.getElementById('btn-open');
+  if (btn) {
+    btn.textContent = '✦ Membuka...';
+    btn.style.pointerEvents = 'none';
+  }
+
   // Cover fade out
   const cover = document.getElementById('cover');
   cover.style.transition = 'opacity 0.7s ease, transform 0.7s ease';
@@ -41,6 +48,7 @@ function openInvitation(e) {
       initScrollReveal();
       spawnMainPetals();
       initCalendarLink();
+      initScrollIndicatorHide();
       setTimeout(initActiveNav, 700);
     });
   }, 700);
@@ -208,9 +216,9 @@ function showMusicPlayer() {
     });
   });
 
-  // Auto-expand pill for 4s then collapse
+  // Auto-expand pill for 6s then collapse (longer so user notices)
   setTimeout(() => expandPill(), 400);
-  setTimeout(() => collapsePill(), 4500);
+  setTimeout(() => collapsePill(), 6500);
 }
 
 function expandPill() {
@@ -410,13 +418,26 @@ async function kirimUcapan() {
   const pesan  = pesanEl.value.trim();
   const status = statusEl.value;
 
-  if (!nama || !pesan || !status) {
-    [namaEl, pesanEl].forEach(el => {
-      if (!el.value.trim()) shakeEl(el);
-    });
-    alert("Mohon isi nama, pesan, dan konfirmasi kehadiran Anda.");
-    return;
+  // Clear previous errors
+  clearFormErrors();
+
+  // Inline validation
+  let hasError = false;
+  if (!nama) {
+    showFormError('error-nama', 'Mohon isi nama Anda');
+    shakeEl(namaEl);
+    hasError = true;
   }
+  if (!status) {
+    showFormError('error-status', 'Pilih konfirmasi kehadiran');
+    hasError = true;
+  }
+  if (!pesan) {
+    showFormError('error-pesan', 'Tuliskan pesan atau doa Anda');
+    shakeEl(pesanEl);
+    hasError = true;
+  }
+  if (hasError) return;
 
   btn.disabled = true;
   btn.innerHTML = '⌛ Mengirim...';
@@ -444,10 +465,25 @@ async function kirimUcapan() {
 
   } catch (err) {
     console.error(err);
-    alert("Maaf, gagal mengirim. Silakan coba lagi.");
+    showFormError('error-pesan', 'Gagal mengirim. Silakan coba lagi.');
     btn.disabled   = false;
     btn.textContent = 'Kirim Ucapan';
   }
+}
+
+function showFormError(id, message) {
+  const el = document.getElementById(id);
+  if (el) {
+    el.textContent = message;
+    el.classList.add('visible');
+  }
+}
+
+function clearFormErrors() {
+  document.querySelectorAll('.form-error').forEach(el => {
+    el.textContent = '';
+    el.classList.remove('visible');
+  });
 }
 
 async function loadMessages() {
@@ -651,6 +687,22 @@ function copyText(elementId, btn) {
 
 function changePage(dir) {
   // placeholder for pagination if needed
+}
+
+/* ============================================================
+   SCROLL INDICATOR — hide after first scroll
+   ============================================================ */
+function initScrollIndicatorHide() {
+  const indicator = document.querySelector('.scroll-indicator');
+  if (!indicator) return;
+
+  let hidden = false;
+  window.addEventListener('scroll', function() {
+    if (!hidden && window.scrollY > 100) {
+      indicator.classList.add('hidden');
+      hidden = true;
+    }
+  }, { passive: true });
 }
 
 /* ============================================================

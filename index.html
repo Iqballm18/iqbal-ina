@@ -95,7 +95,7 @@
       <input type="text" id="input-nama-tamu" class="input-nama-tamu" placeholder="Masukkan nama Anda" aria-label="Nama tamu">
     </div>
 
-    <a href="#" class="btn-open fade-up delay-3" onclick="openInvitation(event)">
+    <a href="#" class="btn-open fade-up delay-3" id="btn-open" onclick="openInvitation(event)">
       Buka Undangan
     </a>
   </div>
@@ -218,6 +218,16 @@
       <div class="quran-quote reveal d3">
         <p>"Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang."</p>
         <div class="quran-surah">— QS. Ar-Rum: 21 —</div>
+      </div>
+
+      <!-- Scroll down indicator -->
+      <div class="scroll-indicator reveal d5">
+        <span class="scroll-indicator-text">Scroll</span>
+        <div class="scroll-indicator-arrow">
+          <svg width="16" height="24" viewBox="0 0 16 24" fill="none" stroke="var(--gold)" stroke-width="1.5">
+            <path d="M8 0 L8 20 M2 14 L8 20 L14 14"/>
+          </svg>
+        </div>
       </div>
     </section>
 
@@ -464,6 +474,7 @@
         <div class="form-group">
           <label for="ucapan-nama">Nama</label>
           <input type="text" id="ucapan-nama" placeholder="Nama Anda" required>
+          <span class="form-error" id="error-nama"></span>
         </div>
         <div class="form-group">
           <label>Konfirmasi Kehadiran</label>
@@ -473,10 +484,12 @@
             <button type="button" class="btn-status" onclick="setStatusHadir(this,'Ragu-ragu')">? Ragu-ragu</button>
           </div>
           <input type="hidden" id="ucapan-status" value="">
+          <span class="form-error" id="error-status"></span>
         </div>
         <div class="form-group">
           <label for="ucapan-pesan">Pesan untuk Mempelai</label>
           <textarea id="ucapan-pesan" rows="4" placeholder="Tuliskan doa dan ucapan Anda..." required></textarea>
+          <span class="form-error" id="error-pesan"></span>
         </div>
         <button type="submit" class="btn-submit">Kirim Ucapan</button>
       </form>
