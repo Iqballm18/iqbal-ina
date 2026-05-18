@@ -81,9 +81,34 @@ function spawnMainPetals() {
   if (main) spawnPetals(main, 10);
 }
 
+/* Sparkle dots — subtle twinkling gold particles */
+function spawnSparkles(container, count) {
+  for (let i = 0; i < count; i++) {
+    const s = document.createElement('div');
+    s.className = 'sparkle';
+    const size = 2 + Math.random() * 3;
+    const dur = 2 + Math.random() * 3;
+    const delay = Math.random() * 5;
+    const left = 10 + Math.random() * 80;
+    const top = 10 + Math.random() * 80;
+    s.style.cssText = `
+      left:${left}%;
+      top:${top}%;
+      width:${size}px;
+      height:${size}px;
+      animation-duration:${dur}s;
+      animation-delay:${delay}s;
+    `;
+    container.appendChild(s);
+  }
+}
+
 window.addEventListener('DOMContentLoaded', () => {
   const cover = document.getElementById('cover');
-  if (cover) spawnPetals(cover, 16);
+  if (cover) {
+    spawnPetals(cover, 16);
+    spawnSparkles(cover, 12);
+  }
   gantiNamaTamu();
   loadMessages();
 });
@@ -199,18 +224,15 @@ function showMusicPlayer() {
   const player = document.querySelector('.music-player');
   if (!player) return;
   player.classList.add('visible');
-  player.style.transform = 'translateZ(0) translateY(80px)';
-  player.style.opacity   = '0';
-  player.style.transition = 'transform 0.6s cubic-bezier(.34,1.3,.64,1), opacity 0.5s ease';
+  player.style.opacity = '0';
+  player.style.transition = 'opacity 0.6s ease';
 
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
-      player.style.transform = 'translateZ(0) translateY(0)';
-      player.style.opacity   = '1';
-      // Remove inline transition after animation completes to prevent scroll jitter
+      player.style.opacity = '1';
+      // Remove inline transition after animation completes
       setTimeout(() => {
         player.style.transition = '';
-        player.style.transform = '';
         player.style.opacity = '';
       }, 700);
     });
@@ -731,41 +753,6 @@ document.addEventListener('DOMContentLoaded', () => {
     toggleBtn.setAttribute('aria-label', isCollapsed ? 'Tampilkan navigasi' : 'Sembunyikan navigasi');
   });
 });
-
-/* ============================================================
-   MOBILE SCROLL STABILITY — prevent fixed elements from jittering
-   On mobile, the browser address bar showing/hiding causes viewport
-   resize which triggers reflow on fixed elements. We counteract this
-   by using a resize observer instead of scroll listener.
-   ============================================================ */
-(function() {
-  // Only apply on mobile/touch devices
-  if (!('ontouchstart' in window)) return;
-
-  let lastHeight = window.innerHeight;
-
-  // Listen for viewport resize (address bar show/hide)
-  window.addEventListener('resize', function() {
-    const newHeight = window.innerHeight;
-    const diff = Math.abs(newHeight - lastHeight);
-
-    // If height change is small (< 150px), it's likely the address bar
-    // In that case, do nothing — let CSS handle it with translate3d
-    if (diff > 0 && diff < 150) {
-      // Temporarily lock the side-nav position to prevent visual jump
-      const sideNav = document.getElementById('side-nav');
-      if (sideNav) {
-        sideNav.style.transition = 'none';
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            sideNav.style.transition = '';
-          });
-        });
-      }
-    }
-    lastHeight = newHeight;
-  }, { passive: true });
-})();
 
 /* ============================================================
    LOADING SKELETON FOR MESSAGES
