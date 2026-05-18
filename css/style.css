@@ -90,7 +90,7 @@ body {
   align-items: center;
   justify-content: center;
   position: relative;
-  background: var(--cream);
+  background: linear-gradient(160deg, #e8f0e4 0%, #f0f5ec 30%, var(--cream) 70%);
   text-align: center;
   padding: 60px 20px 40px;
   overflow: hidden;
@@ -115,16 +115,16 @@ body {
 .cover-leaf-top {
   position: absolute;
   top: 0; left: 0; right: 0;
-  width: 100%; height: 240px;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 220'%3E%3Cellipse cx='200' cy='-30' rx='220' ry='160' fill='%23a5b898' opacity='0.35'/%3E%3Cellipse cx='60' cy='20' rx='80' ry='110' fill='%236b7c5e' opacity='0.18'/%3E%3Cellipse cx='340' cy='10' rx='90' ry='120' fill='%236b7c5e' opacity='0.18'/%3E%3C/svg%3E") center top / cover no-repeat;
+  width: 100%; height: 300px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Cdefs%3E%3Cfilter id='wt' x='-20%25' y='-20%25' width='140%25' height='140%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.04' numOctaves='4' seed='2'/%3E%3CfeDisplacementMap in='SourceGraphic' scale='18'/%3E%3C/filter%3E%3C/defs%3E%3Cellipse cx='200' cy='-20' rx='260' ry='200' fill='%236b7c5e' opacity='0.22' filter='url(%23wt)'/%3E%3Cellipse cx='70' cy='30' rx='120' ry='140' fill='%236b7c5e' opacity='0.18' filter='url(%23wt)'/%3E%3Cellipse cx='350' cy='20' rx='130' ry='150' fill='%236b7c5e' opacity='0.16' filter='url(%23wt)'/%3E%3Cellipse cx='160' cy='60' rx='80' ry='100' fill='%23a5b898' opacity='0.12' filter='url(%23wt)'/%3E%3Cellipse cx='300' cy='50' rx='70' ry='90' fill='%23a5b898' opacity='0.1' filter='url(%23wt)'/%3E%3C/svg%3E") center top / cover no-repeat;
   animation: leafDrift 9s ease-in-out infinite alternate;
 }
 
 .cover-leaf-bottom {
   position: absolute;
   bottom: 0; left: 0; right: 0;
-  width: 100%; height: 220px;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 200'%3E%3Cellipse cx='200' cy='240' rx='220' ry='160' fill='%23a5b898' opacity='0.35'/%3E%3Cellipse cx='50' cy='190' rx='80' ry='110' fill='%236b7c5e' opacity='0.18'/%3E%3Cellipse cx='350' cy='185' rx='90' ry='120' fill='%236b7c5e' opacity='0.18'/%3E%3C/svg%3E") center bottom / cover no-repeat;
+  width: 100%; height: 280px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 280'%3E%3Cdefs%3E%3Cfilter id='wb' x='-20%25' y='-20%25' width='140%25' height='140%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.04' numOctaves='4' seed='5'/%3E%3CfeDisplacementMap in='SourceGraphic' scale='18'/%3E%3C/filter%3E%3C/defs%3E%3Cellipse cx='200' cy='310' rx='260' ry='200' fill='%236b7c5e' opacity='0.22' filter='url(%23wb)'/%3E%3Cellipse cx='50' cy='250' rx='120' ry='140' fill='%236b7c5e' opacity='0.18' filter='url(%23wb)'/%3E%3Cellipse cx='360' cy='240' rx='130' ry='150' fill='%236b7c5e' opacity='0.16' filter='url(%23wb)'/%3E%3Cellipse cx='140' cy='230' rx='80' ry='100' fill='%23a5b898' opacity='0.12' filter='url(%23wb)'/%3E%3Cellipse cx='310' cy='240' rx='70' ry='90' fill='%23a5b898' opacity='0.1' filter='url(%23wb)'/%3E%3C/svg%3E") center bottom / cover no-repeat;
   animation: leafDrift 9s ease-in-out infinite alternate-reverse;
 }
 
@@ -133,27 +133,37 @@ body {
   to   { transform: translateX(10px)  scale(1.04); }
 }
 
-/* Gold corner frame on cover */
+/* Gold ornamental frame on cover */
 .cover-frame {
   position: absolute;
-  inset: 20px;
+  inset: 16px;
   pointer-events: none;
   z-index: 1;
+  border: 1px solid rgba(201,169,110,0.25);
+  border-radius: 8px;
 }
 .cover-frame::before, .cover-frame::after,
 .cover-frame > span::before, .cover-frame > span::after {
   content: '';
   position: absolute;
-  width: 40px; height: 40px;
+  width: 60px; height: 60px;
   border-color: var(--gold);
   border-style: solid;
-  opacity: 0.5;
+  opacity: 0.6;
   animation: cornerGlow 3s ease-in-out infinite alternate;
 }
-.cover-frame::before  { top: 0;    left: 0;  border-width: 1.5px 0 0 1.5px; }
-.cover-frame::after   { top: 0;    right: 0; border-width: 1.5px 1.5px 0 0; }
-.cover-frame > span::before { bottom: 0; left: 0;  border-width: 0 0 1.5px 1.5px; }
-.cover-frame > span::after  { bottom: 0; right: 0; border-width: 0 1.5px 1.5px 0; }
+.cover-frame::before  { top: -1px; left: -1px; border-width: 2px 0 0 2px; border-radius: 8px 0 0 0; }
+.cover-frame::after   { top: -1px; right: -1px; border-width: 2px 2px 0 0; border-radius: 0 8px 0 0; }
+.cover-frame > span::before { bottom: -1px; left: -1px; border-width: 0 0 2px 2px; border-radius: 0 0 0 8px; }
+.cover-frame > span::after  { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; border-radius: 0 0 8px 0; }
+/* Inner decorative dots on frame corners */
+.cover-frame > span {
+  position: absolute;
+  inset: 0;
+}
+.cover-frame > span::before, .cover-frame > span::after {
+  animation-delay: 1.5s;
+}
 @keyframes cornerGlow {
   0%   { opacity: 0.35; }
   100% { opacity: 0.7;  }
@@ -202,14 +212,21 @@ body {
 
 .cover-names {
   font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(52px, 12vw, 90px);
+  font-size: clamp(56px, 14vw, 100px);
   font-weight: 300;
   color: var(--dark);
   line-height: 1;
   position: relative;
   z-index: 3;
+  text-shadow: 0 2px 20px rgba(201,169,110,0.15);
 }
-.cover-names span { color: var(--rose); font-style: italic; }
+.cover-names span {
+  color: var(--rose);
+  font-style: italic;
+  font-size: 0.5em;
+  display: inline-block;
+  margin: 4px 0;
+}
 
 /* Gold shimmer under the names */
 .cover-names-ornament {
@@ -1090,16 +1107,46 @@ footer .footer-credit {
 }
 
 /* ============================================================
-   COVER FADE-UP (original cover entrance)
+   COVER FADE-UP — cinematic entrance animations
    ============================================================ */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(30px); }
   to   { opacity: 1; transform: translateY(0); }
 }
+@keyframes revealName {
+  0% { opacity: 0; transform: translateY(40px) scale(0.9); letter-spacing: 8px; }
+  60% { opacity: 1; transform: translateY(-5px) scale(1.02); letter-spacing: 1px; }
+  100% { opacity: 1; transform: translateY(0) scale(1); letter-spacing: 0; }
+}
+@keyframes shimmerIn {
+  0% { opacity: 0; transform: scaleX(0); }
+  100% { opacity: 1; transform: scaleX(1); }
+}
+@keyframes softPulse {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; }
+}
+
 .fade-up { opacity: 0; animation: fadeUp 0.85s forwards; }
-.fade-up.delay-1 { animation-delay: 0.2s; }
-.fade-up.delay-2 { animation-delay: 0.4s; }
-.fade-up.delay-3 { animation-delay: 0.65s; }
+.fade-up.delay-1 { animation-delay: 0.4s; }
+.fade-up.delay-2 { animation-delay: 0.8s; }
+.fade-up.delay-3 { animation-delay: 1.3s; }
+
+/* Names get special cinematic entrance */
+.cover-names.fade-up {
+  animation: revealName 1.4s cubic-bezier(.22,.68,0,1.05) 0.5s forwards;
+}
+
+/* Ornament line shimmer */
+.cover-names-ornament.fade-up {
+  animation: shimmerIn 0.8s ease 1.2s forwards;
+  transform-origin: center;
+}
+
+/* Bismillah soft pulse */
+.cover-bismillah.fade-up {
+  animation: fadeUp 1s ease 0.1s forwards, softPulse 4s ease-in-out 2s infinite;
+}
 
 /* ============================================================
    LIGHTBOX
