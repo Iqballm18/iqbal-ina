@@ -15,7 +15,7 @@
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; margin: 0; padding: 0; overscroll-behavior: none; }
 
 /* Update di style.css */
 html, body {
@@ -33,6 +33,7 @@ body {
   color: var(--text);
   overflow-x: hidden;
   overflow-y: scroll; /* force scrollbar always visible — prevents layout shift */
+  overscroll-behavior-y: none; /* prevent bounce/overscroll on mobile */
   margin: 0;
   padding: 0;
   position: relative;
@@ -1135,9 +1136,8 @@ footer .footer-credit {
    ============================================================ */
 .music-player {
   position: fixed;
-  bottom: 0;
+  bottom: 24px;
   right: 20px;
-  padding-bottom: 24px;
   z-index: 1500;
   display: none;         /* shown via JS after invitation opens */
   align-items: flex-end;
@@ -1669,13 +1669,11 @@ footer .footer-credit {
   display: none; /* hidden on desktop */
   position: fixed;
   right: 14px;
-  top: 0;
-  height: 100vh;
-  height: 100dvh; /* dynamic viewport height — not affected by address bar */
+  top: 50%;
+  margin-top: -120px; /* half of approximate nav height — static offset, no recalc */
   z-index: 200;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   gap: 12px;
   pointer-events: none; /* allow clicks to pass through the container */
 }
@@ -1936,16 +1934,10 @@ footer .footer-credit {
    MOBILE FIXED ELEMENT STABILITY
    Prevents jumping when mobile browser address bar shows/hides
    ============================================================ */
-@supports (height: 100dvh) {
-  .side-nav {
-    height: 100dvh;
-  }
-}
-
 @media (max-width: 768px) {
   .music-player {
     right: 14px;
-    padding-bottom: 18px;
+    bottom: 20px;
   }
   .side-nav {
     right: 10px;
@@ -2298,4 +2290,58 @@ section::before {
 @keyframes iconFloat {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-4px); }
+}
+
+/* ============================================================
+   COVER — BOTANICAL LEAF DECORATIONS (gold leaves in corners)
+   ============================================================ */
+.cover-botanical {
+  position: absolute;
+  width: 320px;
+  height: 320px;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+  animation: botanicalFadeIn 1.2s ease-out forwards;
+}
+.cover-botanical-tr {
+  top: -20px;
+  right: -20px;
+  animation-delay: 0.3s;
+}
+.cover-botanical-bl {
+  bottom: -20px;
+  left: -20px;
+  animation-delay: 0.6s;
+}
+@keyframes botanicalFadeIn {
+  from { opacity: 0; transform: scale(0.85); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Hide old vine/arch/garland styles */
+.cover-vine,
+.cover-arch,
+.cover-garland {
+  display: none;
+}
+
+/* Hide old corner ornaments */
+.corner-ornament {
+  display: none;
+}
+
+@media (max-width: 520px) {
+  .cover-botanical {
+    width: 220px;
+    height: 220px;
+  }
+  .cover-botanical-tr {
+    top: -10px;
+    right: -20px;
+  }
+  .cover-botanical-bl {
+    bottom: -10px;
+    left: -20px;
+  }
 }
