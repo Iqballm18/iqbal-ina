@@ -267,7 +267,7 @@ document.addEventListener('DOMContentLoaded', () => {
    COUNTDOWN — with digit-flip animation
    ============================================================ */
 function startCountdown() {
-  const target = new Date('2026-08-21T08:00:00+07:00');
+  const target = new Date('2026-08-23T10:00:00+07:00');
   const prev   = { days: null, hours: null, minutes: null, seconds: null };
 
   function setVal(id, key, val) {
@@ -306,9 +306,9 @@ function startCountdown() {
 function initCalendarLink() {
   const title    = "Pernikahan Iqbal & Ina";
   const details  = "Mohon doa restu dan kehadirannya dalam acara pernikahan kami.";
-  const location = "Dsn. Grogol RT/RW 006/006 Ds. Grogol Kec. Diwek Kab. Jombang";
-  const start    = "20260821T010000Z";
-  const end      = "20260821T100000Z";
+  const location = "Perumahan Denanyar Indah AA 11 Rt 04 Rw 07, Jombang";
+  const start    = "20260823T030000Z";
+  const end      = "20260823T120000Z";
 
   const url = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${start}/${end}&details=${encodeURIComponent(details)}&location=${encodeURIComponent(location)}&sf=true&output=xml`;
 
@@ -564,8 +564,8 @@ const giftData = {
   },
   kado: {
     bank: "Alamat Pengiriman",
-    number: "Dsn. Grogol RT/RW 006/006\nDs. Grogol Kec. Diwek Kab. Jombang",
-    holder: "Penerima: Ina Nikmatul Chasanah",
+    number: "Perumahaan Denanyar Indah AA-11 Rt 04 Rw 07, Denanyar, Jombang",
+    holder: "Penerima: Iqbal Maulana",
     btnText: "Salin Alamat"
   }
 };
