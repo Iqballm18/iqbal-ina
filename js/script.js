@@ -112,6 +112,14 @@ window.addEventListener('DOMContentLoaded', () => {
   }
   gantiNamaTamu();
   loadMessages();
+
+  // Auto next track when current song ends
+  const audio = document.getElementById('wedding-audio');
+  if (audio) {
+    audio.addEventListener('ended', () => {
+      nextTrack();
+    });
+  }
 });
 
 /* ============================================================
@@ -470,6 +478,11 @@ function setStatusHadir(btn, status) {
   btn.parentElement.querySelectorAll('.btn-status').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   document.getElementById('ucapan-status').value = status;
+  const err = document.getElementById('error-status');
+  if (err) {
+    err.textContent = '';
+    err.classList.remove('visible');
+  }
 }
 
 async function kirimUcapan() {
@@ -704,18 +717,45 @@ function updateGiftDisplay() {
   }, 230);
 }
 
+function copyToClipboard(text) {
+  if (navigator.clipboard && window.isSecureContext) {
+    return navigator.clipboard.writeText(text);
+  } else {
+    return new Promise((resolve, reject) => {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      textArea.style.position = "fixed";
+      textArea.style.left = "-999999px";
+      textArea.style.top = "-999999px";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        textArea.remove();
+        resolve();
+      } catch (error) {
+        textArea.remove();
+        reject(error);
+      }
+    });
+  }
+}
+
 function copyGiftText() {
   const text = document.getElementById('display-number').innerText;
   const btn = document.getElementById('btn-copy-gift');
   const orig = btn.getAttribute('data-orig') || 'Salin Nomor';
 
-  navigator.clipboard.writeText(text).then(() => {
+  copyToClipboard(text).then(() => {
     btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check" style="vertical-align:middle;margin-right:4px;"><polyline points="20 6 9 17 4 12"/></svg> Berhasil Disalin';
     btn.classList.add('copied');
     setTimeout(() => {
       btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" style="margin-right:4px;"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg> ${orig}`;
       btn.classList.remove('copied');
     }, 2200);
+  }).catch(err => {
+    console.error('Failed to copy text: ', err);
   });
 }
 
@@ -808,7 +848,7 @@ function copyText(elementId, btn) {
   const text = document.getElementById(elementId)?.innerText;
   if (!text) return;
   const orig = btn.innerText;
-  navigator.clipboard.writeText(text).then(() => {
+  copyToClipboard(text).then(() => {
     btn.innerText = "✓ Tersalin";
     btn.style.background = "var(--green)";
     btn.style.color = "#fff";
@@ -817,6 +857,8 @@ function copyText(elementId, btn) {
       btn.style.background = "";
       btn.style.color = "";
     }, 2000);
+  }).catch(err => {
+    console.error('Failed to copy text: ', err);
   });
 }
 
