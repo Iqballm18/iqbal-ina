@@ -127,6 +127,8 @@ let fadeInterval = null;
 /* Playlist data */
 const playlist = [
   { src: 'media/Sheila on 7 - Hari Bersamanya.m4a', title: 'Hari Bersamanya', artist: 'Sheila on 7' },
+  { src: 'media/Wave to Earth - love. .m4a', title: 'love.', artist: 'Wave to Earth' },
+  { src: 'media/Yung Kai - Blue.m4a', title: 'Blue', artist: 'Yung Kai' },
   { src: 'media/Brian McKnight  - Marry Your Daughter.m4a', title: 'Marry Your Daughter', artist: 'Brian McKnight' },
   { src: "media/Paul Partohap - THANK YOU 4 LOVIN' ME.m4a", title: "Thank You 4 Lovin' Me", artist: 'Paul Partohap' },
   { src: 'media/Barasuara - Terbuang Dalam Waktu.m4a', title: 'Terbuang Dalam Waktu', artist: 'Barasuara' }
