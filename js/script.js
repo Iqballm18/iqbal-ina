@@ -22,10 +22,11 @@ function openInvitation(e) {
   // Cover fade out
   const cover = document.getElementById('cover');
   cover.style.transition = 'opacity 0.7s ease, transform 0.7s ease';
-  cover.style.opacity    = '0';
-  cover.style.transform  = 'scale(1.05)';
+  cover.style.opacity = '0';
+  cover.style.transform = 'scale(1.05)';
 
   setTimeout(() => {
+    document.body.classList.remove('cover-active');
     cover.style.display = 'none';
 
     const main = document.getElementById('main-content');
@@ -61,10 +62,10 @@ function spawnPetals(container, count) {
   for (let i = 0; i < count; i++) {
     const p = document.createElement('div');
     p.className = 'petal';
-    const size  = 7 + Math.random() * 9;
-    const dur   = 7 + Math.random() * 9;
+    const size = 7 + Math.random() * 9;
+    const dur = 7 + Math.random() * 9;
     const delay = Math.random() * 12;
-    const left  = Math.random() * 100;
+    const left = Math.random() * 100;
     p.style.cssText = `
       left:${left}%;
       width:${size}px;
@@ -117,7 +118,7 @@ window.addEventListener('DOMContentLoaded', () => {
    PREMIUM MUSIC PLAYER — FADE IN / FADE OUT
    ============================================================ */
 const FADE_DURATION = 2200;   // ms — how long the full fade takes
-let   fadeInterval  = null;
+let fadeInterval = null;
 
 /* ============================================================
    PREMIUM MUSIC PLAYER — INSTANT PLAY/PAUSE
@@ -152,6 +153,9 @@ function nextTrack(e) {
 
   currentTrack = (currentTrack + 1) % playlist.length;
   loadTrack(currentTrack);
+
+  expandPill();
+  schedulePillCollapse(3000);
 
   if (wasPlaying) {
     audio.play().then(() => setPillState(true));
@@ -211,55 +215,91 @@ function setPillState(playing) {
   const pill = document.querySelector('.music-pill');
 
   if (playing) {
-    if (icon) icon.textContent = '♪';
+    if (icon) icon.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pause"><rect width="4" height="16" x="6" y="4"/><rect width="4" height="16" x="14" y="4"/></svg>';
     pill?.classList.add('playing');
   } else {
-    if (icon) icon.textContent = '𝄽';
+    if (icon) icon.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none" class="lucide lucide-play"><polygon points="6 3 20 12 6 21 6 3"/></svg>';
     pill?.classList.remove('playing');
   }
+}
+
+/* ============================================================
+   PREMIUM MUSIC PLAYER — SMART HOVER GUARD & TIMER
+   ============================================================ */
+let pillCollapseTimer = null;
+let isMouseInsidePill = false;
+
+function clearPillTimer() {
+  if (pillCollapseTimer) {
+    clearTimeout(pillCollapseTimer);
+    pillCollapseTimer = null;
+  }
+}
+
+function expandPill() {
+  clearPillTimer();
+  document.querySelector('.music-pill')?.classList.add('expanded');
+}
+
+function collapsePill() {
+  if (isMouseInsidePill) return; // Guard: do not collapse while cursor is over the pill
+  clearPillTimer();
+  document.querySelector('.music-pill')?.classList.remove('expanded');
+}
+
+function schedulePillCollapse(delayMs = 3000) {
+  clearPillTimer();
+  pillCollapseTimer = setTimeout(() => {
+    collapsePill();
+  }, delayMs);
 }
 
 /* Show the pill with a slide-up entrance */
 function showMusicPlayer() {
   const player = document.querySelector('.music-player');
   if (!player) return;
+
+  // Expand immediately so song title & artist are revealed without delay
+  expandPill();
+
   player.classList.add('visible');
   player.style.opacity = '0';
-  player.style.transition = 'opacity 0.6s ease';
+  player.style.transition = 'opacity 0.4s ease';
 
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
       player.style.opacity = '1';
-      // Remove inline transition after animation completes
       setTimeout(() => {
         player.style.transition = '';
         player.style.opacity = '';
-      }, 700);
+      }, 450);
     });
   });
 
-  // Auto-expand pill for 6s then collapse (longer so user notices)
-  setTimeout(() => expandPill(), 400);
-  setTimeout(() => collapsePill(), 6500);
+  // Keep expanded initially for 7s so user can comfortably see the song info
+  schedulePillCollapse(7000);
 }
 
-function expandPill() {
-  document.querySelector('.music-pill')?.classList.add('expanded');
-}
-function collapsePill() {
-  document.querySelector('.music-pill')?.classList.remove('expanded');
-}
-
-/* Hover expand/collapse */
+/* Hover & Touch expand/collapse handlers */
 document.addEventListener('DOMContentLoaded', () => {
   const pill = document.querySelector('.music-pill');
   if (!pill) return;
-  pill.addEventListener('mouseenter', expandPill);
-  pill.addEventListener('mouseleave', () => setTimeout(collapsePill, 800));
-  // Touch support
+
+  // Desktop: Hover Guard
+  pill.addEventListener('mouseenter', () => {
+    isMouseInsidePill = true;
+    expandPill();
+  });
+
+  pill.addEventListener('mouseleave', () => {
+    isMouseInsidePill = false;
+    schedulePillCollapse(3000); // 3s grace period after cursor leaves
+  });
+
+  // Mobile: Touch Support
   pill.addEventListener('touchstart', () => {
     expandPill();
-    setTimeout(collapsePill, 3500);
+    schedulePillCollapse(6000); // 6s view time on touch
   }, { passive: true });
 });
 
@@ -268,11 +308,11 @@ document.addEventListener('DOMContentLoaded', () => {
    ============================================================ */
 function startCountdown() {
   const target = new Date('2026-08-23T10:00:00+07:00');
-  const prev   = { days: null, hours: null, minutes: null, seconds: null };
+  const prev = { days: null, hours: null, minutes: null, seconds: null };
 
   function setVal(id, key, val) {
     const str = String(val).padStart(2, '0');
-    const el  = document.getElementById(id);
+    const el = document.getElementById(id);
     if (!el || prev[key] === str) return;
     el.classList.remove('flip');
     void el.offsetWidth;
@@ -284,16 +324,16 @@ function startCountdown() {
   function update() {
     const diff = target - new Date();
     if (diff <= 0) {
-      ['cd-days','cd-hours','cd-minutes','cd-seconds'].forEach(id => {
+      ['cd-days', 'cd-hours', 'cd-minutes', 'cd-seconds'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.textContent = '00';
       });
       return;
     }
-    setVal('cd-days',    'days',    Math.floor(diff / 86400000));
-    setVal('cd-hours',   'hours',   Math.floor((diff % 86400000) / 3600000));
-    setVal('cd-minutes', 'minutes', Math.floor((diff % 3600000)  / 60000));
-    setVal('cd-seconds', 'seconds', Math.floor((diff % 60000)    / 1000));
+    setVal('cd-days', 'days', Math.floor(diff / 86400000));
+    setVal('cd-hours', 'hours', Math.floor((diff % 86400000) / 3600000));
+    setVal('cd-minutes', 'minutes', Math.floor((diff % 3600000) / 60000));
+    setVal('cd-seconds', 'seconds', Math.floor((diff % 60000) / 1000));
   }
 
   update();
@@ -304,11 +344,11 @@ function startCountdown() {
    GOOGLE CALENDAR LINK
    ============================================================ */
 function initCalendarLink() {
-  const title    = "Pernikahan Iqbal & Ina";
-  const details  = "Mohon doa restu dan kehadirannya dalam acara pernikahan kami.";
+  const title = "Pernikahan Iqbal & Ina";
+  const details = "Mohon doa restu dan kehadirannya dalam acara pernikahan kami.";
   const location = "Perumahan Denanyar Indah AA 11 Rt 04 Rw 07, Jombang";
-  const start    = "20260823T030000Z";
-  const end      = "20260823T120000Z";
+  const start = "20260823T030000Z";
+  const end = "20260823T120000Z";
 
   const url = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${start}/${end}&details=${encodeURIComponent(details)}&location=${encodeURIComponent(location)}&sf=true&output=xml`;
 
@@ -327,15 +367,15 @@ function initScrollReveal() {
       if (!entry.isIntersecting) return;
       const el = entry.target;
 
-      if (['reveal','reveal-left','reveal-right','reveal-scale'].some(c => el.classList.contains(c))) {
+      if (['reveal', 'reveal-left', 'reveal-right', 'reveal-scale'].some(c => el.classList.contains(c))) {
         el.classList.add('revealed');
       }
-      if (el.classList.contains('story-dot'))      el.classList.add('revealed');
+      if (el.classList.contains('story-dot')) el.classList.add('revealed');
       if (el.classList.contains('story-timeline')) setTimeout(() => el.classList.add('line-grow'), 200);
-      if (el.classList.contains('gallery-item'))   el.classList.add('revealed');
-      if (el.classList.contains('divider-leaf'))   el.classList.add('revealed');
-      if (el.classList.contains('event-card'))     el.classList.add('revealed');
-      if (el.classList.contains('message-item'))   el.classList.add('revealed');
+      if (el.classList.contains('gallery-item')) el.classList.add('revealed');
+      if (el.classList.contains('divider-leaf')) el.classList.add('revealed');
+      if (el.classList.contains('event-card')) el.classList.add('revealed');
+      if (el.classList.contains('message-item')) el.classList.add('revealed');
 
       if (el.tagName === 'SECTION') {
         el.classList.add('in-view');
@@ -346,9 +386,9 @@ function initScrollReveal() {
     });
   }, { threshold: 0.10, rootMargin: '0px 0px -36px 0px' });
 
-  ['.reveal','.reveal-left','.reveal-right','.reveal-scale',
-   '.story-dot','.story-timeline','.gallery-item',
-   '.divider-leaf','.event-card','.message-item','section']
+  ['.reveal', '.reveal-left', '.reveal-right', '.reveal-scale',
+    '.story-dot', '.story-timeline', '.gallery-item',
+    '.divider-leaf', '.event-card', '.message-item', 'section']
     .forEach(sel => document.querySelectorAll(sel).forEach(el => observer.observe(el)));
 }
 
@@ -358,7 +398,7 @@ function addRevealClasses() {
     if (!el.classList.contains('reveal')) el.classList.add('reveal');
   });
   document.querySelectorAll('.section-title').forEach(el => {
-    if (!el.classList.contains('reveal')) el.classList.add('reveal','d1');
+    if (!el.classList.contains('reveal')) el.classList.add('reveal', 'd1');
   });
 
   // Countdown boxes stagger
@@ -389,8 +429,8 @@ function addRevealClasses() {
   // Footer
   const footer = document.querySelector('footer');
   if (footer) {
-    footer.querySelector('.footer-label')?.classList.add('reveal','d1');
-    footer.querySelector('.footer-names')?.classList.add('reveal','d2');
+    footer.querySelector('.footer-label')?.classList.add('reveal', 'd1');
+    footer.querySelector('.footer-names')?.classList.add('reveal', 'd2');
   }
 }
 
@@ -398,7 +438,7 @@ function addRevealClasses() {
    GALLERY LIGHTBOX
    ============================================================ */
 function openLightbox(src) {
-  const lb  = document.getElementById('lightbox');
+  const lb = document.getElementById('lightbox');
   const img = document.getElementById('lightbox-img');
   if (!lb || !img) return;
   img.src = src;
@@ -415,7 +455,7 @@ function closeLightbox() {
     document.body.style.overflow = '';
   }, 260);
 }
-(function() {
+(function () {
   const s = document.createElement('style');
   s.textContent = `@keyframes lbOut { to { opacity: 0; } }`;
   document.head.appendChild(s);
@@ -431,13 +471,13 @@ function setStatusHadir(btn, status) {
 }
 
 async function kirimUcapan() {
-  const namaEl   = document.getElementById('ucapan-nama');
-  const pesanEl  = document.getElementById('ucapan-pesan');
+  const namaEl = document.getElementById('ucapan-nama');
+  const pesanEl = document.getElementById('ucapan-pesan');
   const statusEl = document.getElementById('ucapan-status');
-  const btn      = document.querySelector('#ucapan .btn-submit');
+  const btn = document.querySelector('#ucapan .btn-submit');
 
-  const nama   = namaEl.value.trim();
-  const pesan  = pesanEl.value.trim();
+  const nama = namaEl.value.trim();
+  const pesan = pesanEl.value.trim();
   const status = statusEl.value;
 
   // Clear previous errors
@@ -470,9 +510,9 @@ async function kirimUcapan() {
       body: JSON.stringify({ nama, status, pesan })
     });
 
-    btn.textContent = '🌸 Terkirim!';
+    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check" style="vertical-align:middle;margin-right:6px;"><polyline points="20 6 9 17 4 12"/></svg> Terkirim!';
     btn.style.background = 'var(--green)';
-    namaEl.value  = '';
+    namaEl.value = '';
     pesanEl.value = '';
     statusEl.value = '';
     document.querySelectorAll('.btn-status').forEach(b => b.classList.remove('active'));
@@ -480,15 +520,15 @@ async function kirimUcapan() {
     loadMessages();
 
     setTimeout(() => {
-      btn.disabled   = false;
-      btn.textContent = 'Kirim Ucapan';
+      btn.disabled = false;
+      btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-send" style="vertical-align:middle;margin-right:6px;"><line x1="22" x2="11" y1="2" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Kirim Ucapan';
       btn.style.background = '';
     }, 3200);
 
   } catch (err) {
     console.error(err);
     showFormError('error-pesan', 'Gagal mengirim. Silakan coba lagi.');
-    btn.disabled   = false;
+    btn.disabled = false;
     btn.textContent = 'Kirim Ucapan';
   }
 }
@@ -508,13 +548,21 @@ function clearFormErrors() {
   });
 }
 
+function getStatusClass(status = '') {
+  const s = status.toLowerCase();
+  if (s.includes('hadir') && !s.includes('tidak')) return 'status-hadir';
+  if (s.includes('tidak')) return 'status-tidak-hadir';
+  if (s.includes('ragu')) return 'status-ragu-ragu';
+  return '';
+}
+
 async function loadMessages() {
   const list = document.getElementById('messages-list');
   if (!list) return;
   showMessagesSkeleton(list);
 
   try {
-    const res  = await fetch(SCRIPT_URL);
+    const res = await fetch(SCRIPT_URL);
     const data = await res.json();
 
     if (!data.length) {
@@ -522,18 +570,22 @@ async function loadMessages() {
       return;
     }
 
-    list.innerHTML = data.map(item => `
+    list.innerHTML = data.map(item => {
+      const initial = item.nama ? item.nama.trim().charAt(0).toUpperCase() : '💌';
+      const statusCls = getStatusClass(item.status);
+      return `
       <div class="message-item revealed pop-in">
-        <div class="message-icon">💌</div>
-        <div>
+        <div class="message-icon">${escapeHtml(initial)}</div>
+        <div style="flex:1;">
           <div class="message-name">
             ${escapeHtml(item.nama)}
-            <span class="message-status">${escapeHtml(item.status)}</span>
+            ${item.status ? `<span class="message-status ${statusCls}">${escapeHtml(item.status)}</span>` : ''}
           </div>
           <div class="message-text">${escapeHtml(item.pesan)}</div>
         </div>
       </div>
-    `).join('');
+    `;
+    }).join('');
 
   } catch (err) {
     list.innerHTML = '<p style="text-align:center;color:var(--rose);font-size:12px;padding:20px 0;">Gagal memuat ucapan.</p>';
@@ -546,7 +598,7 @@ async function loadMessages() {
 const giftData = {
   bri: {
     bank: "Bank BRI",
-    number: "3638 0103 6696 532",
+    number: "363801036696532",
     holder: "a.n. INA NIKMATUL CHASANAH",
     btnText: "Salin Nomor"
   },
@@ -570,38 +622,97 @@ const giftData = {
   }
 };
 
+function toggleGiftDropdown(e) {
+  if (e) e.stopPropagation();
+  const trigger = document.getElementById('gift-dropdown-trigger');
+  const menu = document.getElementById('gift-dropdown-menu');
+  if (!menu || !trigger) return;
+  const isOpen = menu.classList.contains('show');
+
+  if (isOpen) {
+    closeGiftDropdown();
+  } else {
+    menu.classList.add('show');
+    trigger.classList.add('open');
+    trigger.setAttribute('aria-expanded', 'true');
+  }
+}
+
+function closeGiftDropdown() {
+  const trigger = document.getElementById('gift-dropdown-trigger');
+  const menu = document.getElementById('gift-dropdown-menu');
+  if (menu && trigger) {
+    menu.classList.remove('show');
+    trigger.classList.remove('open');
+    trigger.setAttribute('aria-expanded', 'false');
+  }
+}
+
+function selectGiftDropdownOption(el, key) {
+  document.querySelectorAll('.gift-dropdown-option').forEach(opt => opt.classList.remove('active'));
+  el.classList.add('active');
+
+  const triggerSelected = document.getElementById('gift-dropdown-selected');
+  if (triggerSelected) {
+    triggerSelected.innerHTML = el.innerHTML;
+  }
+
+  const selector = document.getElementById('gift-selector');
+  if (selector) {
+    selector.value = key;
+    updateGiftDisplay();
+  }
+
+  closeGiftDropdown();
+}
+
+function selectGiftMethod(btn, key) {
+  const option = document.querySelector(`.gift-dropdown-option[data-value="${key}"]`);
+  if (option) {
+    selectGiftDropdownOption(option, key);
+  }
+}
+
+document.addEventListener('click', function (e) {
+  const dropdown = document.getElementById('custom-gift-dropdown');
+  if (dropdown && !dropdown.contains(e.target)) {
+    closeGiftDropdown();
+  }
+});
+
 function updateGiftDisplay() {
-  const key       = document.getElementById('gift-selector').value;
-  const selected  = giftData[key];
+  const key = document.getElementById('gift-selector').value;
+  const selected = giftData[key];
   const detailBox = document.getElementById('gift-detail-box');
+  const btn = document.getElementById('btn-copy-gift');
 
   detailBox.style.opacity = '0';
   detailBox.style.transform = 'translateY(8px)';
   detailBox.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
 
   setTimeout(() => {
-    document.getElementById('display-bank').innerText   = selected.bank;
+    document.getElementById('display-bank').innerText = selected.bank;
     document.getElementById('display-number').innerText = selected.number;
     document.getElementById('display-holder').innerText = selected.holder;
-    document.getElementById('btn-copy-gift').innerText  = selected.btnText;
-    detailBox.style.opacity   = '1';
+    btn.setAttribute('data-orig', selected.btnText);
+    btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" style="margin-right:4px;"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg> ${selected.btnText}`;
+    btn.classList.remove('copied');
+    detailBox.style.opacity = '1';
     detailBox.style.transform = 'translateY(0)';
   }, 230);
 }
 
 function copyGiftText() {
   const text = document.getElementById('display-number').innerText;
-  const btn  = document.getElementById('btn-copy-gift');
-  const orig = btn.innerText;
+  const btn = document.getElementById('btn-copy-gift');
+  const orig = btn.getAttribute('data-orig') || 'Salin Nomor';
 
   navigator.clipboard.writeText(text).then(() => {
-    btn.innerText = "✓ Tersalin";
-    btn.style.background = "var(--green)";
-    btn.style.color = "#fff";
+    btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check" style="vertical-align:middle;margin-right:4px;"><polyline points="20 6 9 17 4 12"/></svg> Berhasil Disalin';
+    btn.classList.add('copied');
     setTimeout(() => {
-      btn.innerText = orig;
-      btn.style.background = "";
-      btn.style.color = "";
+      btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" style="margin-right:4px;"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg> ${orig}`;
+      btn.classList.remove('copied');
     }, 2200);
   });
 }
@@ -675,12 +786,12 @@ function initActiveNav() {
    ============================================================ */
 function escapeHtml(str = '') {
   return String(str)
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
 /* Shake animation style — injected once */
-(function() {
+(function () {
   const s = document.createElement('style');
   s.textContent = `@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(7px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}`;
   document.head.appendChild(s);
@@ -719,7 +830,7 @@ function initScrollIndicatorHide() {
   if (!indicator) return;
 
   let hidden = false;
-  window.addEventListener('scroll', function() {
+  window.addEventListener('scroll', function () {
     if (!hidden && window.scrollY > 100) {
       indicator.classList.add('hidden');
       hidden = true;
@@ -730,7 +841,7 @@ function initScrollIndicatorHide() {
 /* ============================================================
    LIGHTBOX — KEYBOARD SUPPORT (Escape to close)
    ============================================================ */
-document.addEventListener('keydown', function(e) {
+document.addEventListener('keydown', function (e) {
   if (e.key === 'Escape') {
     const lb = document.getElementById('lightbox');
     if (lb && lb.classList.contains('open')) {
@@ -740,18 +851,56 @@ document.addEventListener('keydown', function(e) {
 });
 
 /* ============================================================
-   SIDE NAV TOGGLE (hide/show dots)
+   SIDE NAV TOGGLE (scroll-up reveal, scroll-down collapse)
    ============================================================ */
 document.addEventListener('DOMContentLoaded', () => {
   const toggleBtn = document.getElementById('side-nav-toggle');
   const sideNav = document.getElementById('side-nav');
   if (!toggleBtn || !sideNav) return;
 
+  let isManual = false;
+  let scrollTimer = null;
+  let lastScrollY = window.scrollY;
+
   toggleBtn.addEventListener('click', () => {
+    isManual = true;
     sideNav.classList.toggle('collapsed');
     const isCollapsed = sideNav.classList.contains('collapsed');
     toggleBtn.setAttribute('aria-label', isCollapsed ? 'Tampilkan navigasi' : 'Sembunyikan navigasi');
   });
+
+  window.addEventListener('scroll', () => {
+    if (isManual) return;
+
+    const currentScrollY = window.scrollY;
+    const delta = currentScrollY - lastScrollY;
+
+    if (Math.abs(delta) > 4) {
+      if (delta > 0) {
+        // Scrolling DOWN -> Collapse side nav
+        if (!sideNav.classList.contains('collapsed')) {
+          sideNav.classList.add('collapsed');
+          toggleBtn.setAttribute('aria-label', 'Tampilkan navigasi');
+        }
+      } else {
+        // Scrolling UP -> Reveal side nav
+        if (sideNav.classList.contains('collapsed')) {
+          sideNav.classList.remove('collapsed');
+          toggleBtn.setAttribute('aria-label', 'Sembunyikan navigasi');
+        }
+      }
+      lastScrollY = currentScrollY;
+    }
+
+    // Auto-expand side nav 1.8s after scroll stops
+    if (scrollTimer) clearTimeout(scrollTimer);
+    scrollTimer = setTimeout(() => {
+      if (!isManual) {
+        sideNav.classList.remove('collapsed');
+        toggleBtn.setAttribute('aria-label', 'Sembunyikan navigasi');
+      }
+    }, 1800);
+  }, { passive: true });
 });
 
 /* ============================================================
@@ -836,3 +985,16 @@ function launchConfetti() {
 
   requestAnimationFrame(animate);
 }
+
+/* ============================================================
+   PREVENT MOBILE PINCH ZOOM & DOUBLE-TAP ZOOM
+   ============================================================ */
+document.addEventListener('gesturestart', function (e) {
+  e.preventDefault();
+}, { passive: false });
+
+document.addEventListener('touchmove', function (e) {
+  if (e.touches && e.touches.length > 1) {
+    e.preventDefault();
+  }
+}, { passive: false });
