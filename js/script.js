@@ -51,6 +51,13 @@ function openInvitation(e) {
       initCalendarLink();
       initScrollIndicatorHide();
       setTimeout(initActiveNav, 700);
+
+      // Trigger staggered entrance animation for hero section elements when invitation opens
+      setTimeout(() => {
+        document.querySelectorAll('.hero-section .reveal').forEach(el => {
+          el.classList.add('revealed');
+        });
+      }, 100);
     });
   }, 700);
 }
@@ -58,28 +65,59 @@ function openInvitation(e) {
 /* ============================================================
    PETALS — cover + main content background ambiance
    ============================================================ */
+const PETAL_TEMPLATES = [
+  (id) => `<svg viewBox="0 0 30 40" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="pgrad1_${id}" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fde2e4" stop-opacity="0.95"/><stop offset="50%" stop-color="#ffb5a7" stop-opacity="0.9"/><stop offset="100%" stop-color="#e87a90" stop-opacity="0.85"/></linearGradient></defs><path d="M15 2 C23 2, 29 10, 28 22 C27 32, 20 38, 15 38 C10 38, 3 32, 2 22 C1 10, 7 2, 15 2 Z" fill="url(#pgrad1_${id})"/><path d="M15 5 C17 12, 17 26, 15 34" stroke="rgba(255,255,255,0.45)" stroke-width="0.7" stroke-linecap="round"/></svg>`,
+  (id) => `<svg viewBox="0 0 32 38" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="pgrad2_${id}" x1="0%" y1="0%" x2="80%" y2="100%"><stop offset="0%" stop-color="#fae1dd" stop-opacity="0.95"/><stop offset="45%" stop-color="#f7cad0" stop-opacity="0.9"/><stop offset="100%" stop-color="#e27373" stop-opacity="0.85"/></linearGradient></defs><path d="M16 4 C11 1, 4 6, 3 15 C2 24, 10 35, 16 37 C22 35, 30 24, 29 15 C28 6, 21 1, 16 4 Z" fill="url(#pgrad2_${id})"/><path d="M16 8 C14 16, 15 28, 16 34" stroke="rgba(255,255,255,0.45)" stroke-width="0.75"/></svg>`,
+  (id) => `<svg viewBox="0 0 34 36" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="pgrad3_${id}" x1="20%" y1="0%" x2="100%" y2="90%"><stop offset="0%" stop-color="#f8edeb" stop-opacity="0.95"/><stop offset="60%" stop-color="#f4acb7" stop-opacity="0.88"/><stop offset="100%" stop-color="#c9607e" stop-opacity="0.82"/></linearGradient></defs><path d="M8 3 C18 -2, 33 6, 31 20 C29 31, 18 36, 10 33 C4 30, -1 20, 2 12 C4 7, 5 4, 8 3 Z" fill="url(#pgrad3_${id})"/><path d="M10 7 C14 13, 20 22, 16 30" stroke="rgba(255,255,255,0.4)" stroke-width="0.7" stroke-linecap="round"/></svg>`,
+  (id) => `<svg viewBox="0 0 24 32" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="pgrad4_${id}" cx="40%" cy="30%" r="70%"><stop offset="0%" stop-color="#ffe5ec"/><stop offset="60%" stop-color="#ffb3c1"/><stop offset="100%" stop-color="#d94e73"/></radialGradient></defs><path d="M12 2 C18 2, 22 9, 21 18 C20 25, 16 30, 12 30 C8 30, 4 25, 3 18 C2 9, 6 2, 12 2 Z" fill="url(#pgrad4_${id})" opacity="0.9"/></svg>`,
+  (id) => `<svg viewBox="0 0 26 42" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="pgrad5_${id}" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fff0f3"/><stop offset="40%" stop-color="#ffccd5"/><stop offset="100%" stop-color="#b84c68"/></linearGradient></defs><path d="M13 2 C21 5, 25 15, 23 27 C21 37, 16 41, 13 41 C10 41, 5 37, 3 27 C1 15, 5 5, 13 2 Z" fill="url(#pgrad5_${id})"/><path d="M13 5 C15 14, 15 27, 13 37" stroke="rgba(255,255,255,0.5)" stroke-width="0.75"/></svg>`
+];
+
+let petalIdCounter = 0;
+
 function spawnPetals(container, count) {
   for (let i = 0; i < count; i++) {
+    petalIdCounter++;
     const p = document.createElement('div');
-    p.className = 'petal';
-    const size = 7 + Math.random() * 9;
-    const dur = 7 + Math.random() * 9;
-    const delay = Math.random() * 12;
+    const templateIdx = Math.floor(Math.random() * PETAL_TEMPLATES.length);
+    const animType = (i % 3) + 1;
+
+    // Depth & size layer distribution
+    const depthRand = Math.random();
+    let depthClass = 'petal-md';
+    let baseSize = 16 + Math.random() * 8;  // 16px - 24px
+    let baseDur = 8 + Math.random() * 8;     // 8s - 16s
+
+    if (depthRand < 0.3) {
+      depthClass = 'petal-bg';
+      baseSize = 10 + Math.random() * 6;    // 10px - 16px
+      baseDur = 14 + Math.random() * 8;     // 14s - 22s
+    } else if (depthRand > 0.78) {
+      depthClass = 'petal-fg';
+      baseSize = 24 + Math.random() * 10;   // 24px - 34px
+      baseDur = 7 + Math.random() * 6;      // 7s - 13s
+    }
+
+    p.className = `petal petal-anim-${animType} ${depthClass}`;
+
+    const delay = Math.random() * 14;
     const left = Math.random() * 100;
+
     p.style.cssText = `
       left:${left}%;
-      width:${size}px;
-      height:${size * 1.45}px;
-      animation-duration:${dur}s;
+      width:${baseSize}px;
+      height:${baseSize * 1.3}px;
+      animation-duration:${baseDur}s;
       animation-delay:${delay}s;
     `;
+    p.innerHTML = PETAL_TEMPLATES[templateIdx](petalIdCounter);
     container.appendChild(p);
   }
 }
 
 function spawnMainPetals() {
   const main = document.getElementById('main-content');
-  if (main) spawnPetals(main, 10);
+  if (main) spawnPetals(main, 14);
 }
 
 /* Sparkle dots — subtle twinkling gold particles */
@@ -107,7 +145,7 @@ function spawnSparkles(container, count) {
 window.addEventListener('DOMContentLoaded', () => {
   const cover = document.getElementById('cover');
   if (cover) {
-    spawnPetals(cover, 16);
+    spawnPetals(cover, 22);
     spawnSparkles(cover, 12);
   }
   gantiNamaTamu();
@@ -134,10 +172,9 @@ let fadeInterval = null;
 
 /* Playlist data */
 const playlist = [
-  { src: 'media/Sheila on 7 - Hari Bersamanya.m4a', title: 'Hari Bersamanya', artist: 'Sheila on 7' },
   { src: 'media/Wave to Earth - love. .m4a', title: 'love.', artist: 'Wave to Earth' },
+  { src: 'media/Sheila on 7 - Hari Bersamanya.m4a', title: 'Hari Bersamanya', artist: 'Sheila on 7' },
   { src: 'media/Yung Kai - Blue.m4a', title: 'Blue', artist: 'Yung Kai' },
-  { src: 'media/Brian McKnight  - Marry Your Daughter.m4a', title: 'Marry Your Daughter', artist: 'Brian McKnight' },
   { src: "media/Paul Partohap - THANK YOU 4 LOVIN' ME.m4a", title: "Thank You 4 Lovin' Me", artist: 'Paul Partohap' },
   { src: 'media/Barasuara - Terbuang Dalam Waktu.m4a', title: 'Terbuang Dalam Waktu', artist: 'Barasuara' }
 ];
@@ -317,7 +354,7 @@ document.addEventListener('DOMContentLoaded', () => {
    COUNTDOWN — with digit-flip animation
    ============================================================ */
 function startCountdown() {
-  const target = new Date('2026-08-23T10:00:00+07:00');
+  const target = new Date('2026-08-23T09:00:00+07:00');
   const prev = { days: null, hours: null, minutes: null, seconds: null };
 
   function setVal(id, key, val) {
@@ -357,8 +394,8 @@ function initCalendarLink() {
   const title = "Pernikahan Iqbal & Ina";
   const details = "Mohon doa restu dan kehadirannya dalam acara pernikahan kami.";
   const location = "Perumahan Denanyar Indah AA 11 Rt 04 Rw 07, Jombang";
-  const start = "20260823T030000Z";
-  const end = "20260823T120000Z";
+  const start = "20260823T020000Z";
+  const end = "20260823T070000Z";
 
   const url = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${start}/${end}&details=${encodeURIComponent(details)}&location=${encodeURIComponent(location)}&sf=true&output=xml`;
 
@@ -375,6 +412,7 @@ function initScrollReveal() {
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (!entry.isIntersecting) return;
+      if (document.body.classList.contains('cover-active')) return;
       const el = entry.target;
 
       if (['reveal', 'reveal-left', 'reveal-right', 'reveal-scale'].some(c => el.classList.contains(c))) {
@@ -533,6 +571,7 @@ async function kirimUcapan() {
     document.querySelectorAll('.btn-status').forEach(b => b.classList.remove('active'));
 
     loadMessages();
+    showToast('<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gold-light)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg> <span>Terima kasih atas ucapan dan doa Anda!</span>');
 
     setTimeout(() => {
       btn.disabled = false;
@@ -706,9 +745,17 @@ function updateGiftDisplay() {
   detailBox.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
 
   setTimeout(() => {
+    const numberEl = document.getElementById('display-number');
     document.getElementById('display-bank').innerText = selected.bank;
-    document.getElementById('display-number').innerText = selected.number;
+    numberEl.innerText = selected.number;
     document.getElementById('display-holder').innerText = selected.holder;
+
+    if (key === 'kado') {
+      numberEl.classList.add('is-address');
+    } else {
+      numberEl.classList.remove('is-address');
+    }
+
     btn.setAttribute('data-orig', selected.btnText);
     btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" style="margin-right:4px;"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg> ${selected.btnText}`;
     btn.classList.remove('copied');
@@ -742,6 +789,36 @@ function copyToClipboard(text) {
   }
 }
 
+/* ============================================================
+   TOAST NOTIFICATIONS
+   ============================================================ */
+function showToast(message) {
+  let container = document.getElementById('toast-container');
+  if (!container) {
+    container = document.createElement('div');
+    container.id = 'toast-container';
+    container.className = 'toast-container';
+    document.body.appendChild(container);
+  }
+  const toast = document.createElement('div');
+  toast.className = 'toast-notification';
+  toast.innerHTML = message;
+  container.appendChild(toast);
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      toast.classList.add('show');
+    });
+  });
+
+  setTimeout(() => {
+    toast.classList.remove('show');
+    setTimeout(() => {
+      toast.remove();
+    }, 400);
+  }, 2800);
+}
+
 function copyGiftText() {
   const text = document.getElementById('display-number').innerText;
   const btn = document.getElementById('btn-copy-gift');
@@ -750,6 +827,9 @@ function copyGiftText() {
   copyToClipboard(text).then(() => {
     btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check" style="vertical-align:middle;margin-right:4px;"><polyline points="20 6 9 17 4 12"/></svg> Berhasil Disalin';
     btn.classList.add('copied');
+
+    showToast('<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gold-light)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check-check"><path d="M18 6 7 17l-5-5"/><path d="m22 10-7.5 7.5L13 16"/></svg> <span>Berhasil disalin ke clipboard</span>');
+
     setTimeout(() => {
       btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy" style="margin-right:4px;"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg> ${orig}`;
       btn.classList.remove('copied');
@@ -873,13 +953,16 @@ function initScrollIndicatorHide() {
   const indicator = document.querySelector('.scroll-indicator');
   if (!indicator) return;
 
-  let hidden = false;
-  window.addEventListener('scroll', function () {
-    if (!hidden && window.scrollY > 100) {
+  function checkScroll() {
+    if (window.scrollY > 80) {
       indicator.classList.add('hidden');
-      hidden = true;
+    } else {
+      indicator.classList.remove('hidden');
     }
-  }, { passive: true });
+  }
+
+  window.addEventListener('scroll', checkScroll, { passive: true });
+  checkScroll();
 }
 
 /* ============================================================
