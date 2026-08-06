@@ -2767,6 +2767,65 @@ footer .footer-credit {
 
 
 
+/* ============================================================
+   DESKTOP COVER REDESIGN — Ornaments constrained to center
+   ============================================================ */
+@media (min-width: 769px) {
+  .cover-leaf-top {
+    left: 50% !important;
+    right: auto !important;
+    width: 540px !important;
+    max-width: 100% !important;
+    transform: translateX(-50%) !important;
+    animation: leafDriftDesktop 9s ease-in-out infinite alternate !important;
+  }
+
+  .cover-leaf-bottom {
+    left: 50% !important;
+    right: auto !important;
+    width: 540px !important;
+    max-width: 100% !important;
+    transform: translateX(-50%) !important;
+    animation: leafDriftDesktop 9s ease-in-out infinite alternate-reverse !important;
+  }
+
+  @keyframes leafDriftDesktop {
+    from {
+      transform: translateX(-50%) scale(1);
+    }
+    to {
+      transform: translateX(-52%) scale(1.02);
+    }
+  }
+
+  .cover-corner-svg.tl {
+    left: calc(50% - 260px) !important;
+    top: 16px !important;
+  }
+
+  .cover-corner-svg.tr {
+    right: calc(50% - 260px) !important;
+    top: 16px !important;
+  }
+
+  .cover-corner-svg.bl {
+    left: calc(50% - 260px) !important;
+    bottom: 16px !important;
+  }
+
+  .cover-corner-svg.br {
+    right: calc(50% - 260px) !important;
+    bottom: 16px !important;
+  }
+
+  .cover-frame {
+    left: calc(50% - 270px) !important;
+    right: calc(50% - 270px) !important;
+    max-width: 540px !important;
+    margin: 0 auto !important;
+  }
+}
+
 /* Couple section extras */
 .couple-bg-ring {
   position: absolute;
