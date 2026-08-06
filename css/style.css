@@ -1755,6 +1755,55 @@ section {
   margin-bottom: 18px;
 }
 
+/* Kirim Kado Address Card Layout */
+.virtual-bank-card.is-kado {
+  display: flex;
+  flex-direction: column;
+}
+
+.virtual-bank-card.is-kado .virtual-card-chip {
+  display: none !important;
+}
+
+.virtual-bank-card.is-kado .virtual-card-top {
+  order: 1;
+  justify-content: flex-start;
+  margin-bottom: 10px;
+}
+
+.virtual-bank-card.is-kado .bank-name {
+  font-size: 12.5px;
+  letter-spacing: 1.8px;
+  color: var(--gold-dark);
+  font-weight: 600;
+}
+
+.virtual-bank-card.is-kado .account-holder {
+  order: 2;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--dark);
+  letter-spacing: 0.3px;
+  margin-bottom: 6px;
+  opacity: 0.95;
+}
+
+.virtual-bank-card.is-kado .account-number.is-address {
+  order: 3;
+  font-size: 13.5px;
+  font-weight: 400;
+  letter-spacing: 0.2px;
+  line-height: 1.6;
+  color: var(--text);
+  opacity: 0.9;
+  margin: 0 0 18px;
+}
+
+.virtual-bank-card.is-kado .btn-copy {
+  order: 4;
+  align-self: flex-start;
+}
+
 .btn-copy {
   padding: 9px 22px;
   border-radius: 20px;

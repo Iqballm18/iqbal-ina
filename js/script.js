@@ -751,8 +751,10 @@ function updateGiftDisplay() {
     document.getElementById('display-holder').innerText = selected.holder;
 
     if (key === 'kado') {
+      detailBox.classList.add('is-kado');
       numberEl.classList.add('is-address');
     } else {
+      detailBox.classList.remove('is-kado');
       numberEl.classList.remove('is-address');
     }
 
