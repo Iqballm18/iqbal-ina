@@ -4,6 +4,39 @@
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby5XWkYAXiaI4nNMizOQ7HkCeuSiHfrQu3h0AVvsFyawPIxxoLFmFTbML53MukPcbL8/exec";
 
 /* ============================================================
+   PRELOADER INITIALIZATION
+   ============================================================ */
+function initPreloader() {
+  const preloader = document.getElementById('preloader');
+  if (!preloader) return;
+
+  let isHidden = false;
+
+  const hidePreloader = () => {
+    if (isHidden) return;
+    isHidden = true;
+    preloader.classList.add('preloader-hidden');
+    setTimeout(() => {
+      preloader.style.display = 'none';
+    }, 850);
+  };
+
+  // Hide preloader when all window assets (fonts, images) are loaded
+  window.addEventListener('load', () => {
+    setTimeout(hidePreloader, 300);
+  });
+
+  // Safety fallback: force hide after 2.2s max if load event takes too long
+  setTimeout(hidePreloader, 2200);
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initPreloader);
+} else {
+  initPreloader();
+}
+
+/* ============================================================
    OPEN INVITATION
    ============================================================ */
 function openInvitation(e) {
@@ -558,9 +591,10 @@ async function kirimUcapan() {
   btn.innerHTML = '⌛ Mengirim...';
 
   try {
+    const timestamp = new Date().toISOString();
     await fetch(SCRIPT_URL, {
       method: 'POST',
-      body: JSON.stringify({ nama, status, pesan })
+      body: JSON.stringify({ nama, status, pesan, timestamp })
     });
 
     btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check" style="vertical-align:middle;margin-right:6px;"><polyline points="20 6 9 17 4 12"/></svg> Terkirim!';
@@ -608,6 +642,102 @@ function getStatusClass(status = '') {
   if (s.includes('tidak')) return 'status-tidak-hadir';
   if (s.includes('ragu')) return 'status-ragu-ragu';
   return '';
+}
+
+/* ============================================================
+   RELATIVE TIME FORMATTER
+   ============================================================ */
+function getRawTimeFromItem(item) {
+  if (!item) return null;
+
+  if (typeof item === 'object') {
+    // 1. Explicit property names
+    const keys = [
+      'timestamp', 'waktu', 'tanggal', 'date', 'time',
+      'created_at', 'createdat', 'createdtime', 'created_time',
+      'tgl', 'datetime', 'Timestamp', 'Waktu', 'Tanggal', 'Date', 'Time'
+    ];
+    for (const k of keys) {
+      if (item[k] !== undefined && item[k] !== null && item[k] !== '') {
+        return item[k];
+      }
+    }
+
+    // 2. Search keys case-insensitively
+    for (const k of Object.keys(item)) {
+      const lk = k.toLowerCase();
+      if (lk.includes('time') || lk.includes('waktu') || lk.includes('date') || lk.includes('tgl') || lk.includes('stamp')) {
+        if (item[k]) return item[k];
+      }
+    }
+  }
+
+  return null;
+}
+
+function formatTimeAgo(dateInput) {
+  if (!dateInput) return 'baru saja';
+
+  let date = null;
+
+  if (dateInput instanceof Date) {
+    date = dateInput;
+  } else if (typeof dateInput === 'number') {
+    date = new Date(dateInput);
+  } else if (typeof dateInput === 'string') {
+    const trimmed = dateInput.trim();
+    if (!trimmed) return 'baru saja';
+
+    if (/^\d+$/.test(trimmed)) {
+      date = new Date(parseInt(trimmed, 10));
+    } else {
+      date = new Date(trimmed);
+
+      if (isNaN(date.getTime())) {
+        date = new Date(trimmed.replace(' ', 'T'));
+      }
+
+      if (isNaN(date.getTime())) {
+        const parts = trimmed.match(/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{4})(?:\s+(\d{1,2}):(\d{1,2})(?::(\d{1,2}))?)?/);
+        if (parts) {
+          const day = parseInt(parts[1], 10);
+          const month = parseInt(parts[2], 10) - 1;
+          const year = parseInt(parts[3], 10);
+          const hour = parts[4] ? parseInt(parts[4], 10) : 0;
+          const min = parts[5] ? parseInt(parts[5], 10) : 0;
+          const sec = parts[6] ? parseInt(parts[6], 10) : 0;
+          date = new Date(year, month, day, hour, min, sec);
+        } else {
+          date = new Date(trimmed.replace(/-/g, '/'));
+        }
+      }
+    }
+  }
+
+  if (!date || isNaN(date.getTime())) return 'baru saja';
+
+  const now = new Date();
+  const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+  if (diffInSeconds <= 45) return 'baru saja';
+
+  const minutes = Math.floor(diffInSeconds / 60);
+  if (minutes < 60) return `${minutes} menit yang lalu`;
+
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours} jam yang lalu`;
+
+  const days = Math.floor(hours / 24);
+  if (days < 7) return `${days} hari yang lalu`;
+
+  const weeks = Math.floor(days / 7);
+  if (weeks < 4) return `${weeks} minggu yang lalu`;
+
+  const months = Math.floor(days / 30);
+  if (months < 12) return `${months} bulan yang lalu`;
+
+  const years = Math.floor(days / 365);
+  return `${years} tahun yang lalu`;
 }
 
 let allMessages = [];
@@ -670,13 +800,19 @@ function renderMessagesPage() {
   list.innerHTML = pageItems.map(item => {
     const initial = item.nama ? item.nama.trim().charAt(0).toUpperCase() : '💌';
     const statusCls = getStatusClass(item.status);
+    const rawTime = getRawTimeFromItem(item);
+    const timeAgo = formatTimeAgo(rawTime);
+
     return `
     <div class="message-item revealed pop-in">
       <div class="message-icon">${escapeHtml(initial)}</div>
       <div style="flex:1;">
-        <div class="message-name">
-          ${escapeHtml(item.nama)}
-          ${item.status ? `<span class="message-status ${statusCls}">${escapeHtml(item.status)}</span>` : ''}
+        <div class="message-header">
+          <div class="message-name-group">
+            <span class="message-name">${escapeHtml(item.nama)}</span>
+            ${item.status ? `<span class="message-status ${statusCls}">${escapeHtml(item.status)}</span>` : ''}
+          </div>
+          <span class="message-time"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-1px;margin-right:3px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>${escapeHtml(timeAgo)}</span>
         </div>
         <div class="message-text">${escapeHtml(item.pesan)}</div>
       </div>

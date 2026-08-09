@@ -54,6 +54,109 @@ body {
 }
 
 /* ============================================================
+   PRELOADER SCREEN
+   ============================================================ */
+#preloader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  background-color: var(--cream);
+  background-image: 
+    radial-gradient(circle at 50% 40%, rgba(232, 213, 163, 0.25) 0%, transparent 65%),
+    radial-gradient(circle at 50% 80%, rgba(201, 130, 107, 0.12) 0%, transparent 50%);
+  z-index: 999999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+#preloader.preloader-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.preloader-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  max-width: 320px;
+}
+
+.preloader-crown {
+  margin-bottom: 1rem;
+  animation: preloaderPulse 3s ease-in-out infinite;
+}
+
+.preloader-title {
+  font-family: 'Cormorant Garamond', 'Great Vibes', serif;
+  font-size: 2.4rem;
+  font-weight: 600;
+  color: var(--dark);
+  letter-spacing: 0.05em;
+  margin-bottom: 1.25rem;
+  line-height: 1.2;
+}
+
+.preloader-title span {
+  font-family: 'Great Vibes', cursive;
+  font-size: 2rem;
+  color: var(--gold);
+  margin: 0 4px;
+}
+
+.preloader-spinner-wrapper {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 1.25rem;
+}
+
+.preloader-spinner {
+  width: 100%;
+  height: 100%;
+  border: 2px solid rgba(201, 169, 110, 0.2);
+  border-top-color: var(--gold);
+  border-right-color: var(--gold-light);
+  border-radius: 50%;
+  animation: preloaderSpin 1s cubic-bezier(0.55, 0.15, 0.45, 0.85) infinite;
+}
+
+.preloader-text {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--green);
+  opacity: 0.85;
+  animation: preloaderFade 2s ease-in-out infinite alternate;
+}
+
+@keyframes preloaderSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes preloaderPulse {
+  0%, 100% { transform: scale(1); opacity: 0.9; }
+  50% { transform: scale(1.06); opacity: 1; }
+}
+
+@keyframes preloaderFade {
+  0% { opacity: 0.4; }
+  100% { opacity: 0.95; }
+}
+
+/* ============================================================
    GOLD ORNAMENT DECORATIONS (reusable SVG corners/dividers)
    ============================================================ */
 
@@ -2105,16 +2208,38 @@ section {
   box-shadow: 0 4px 12px rgba(107, 124, 94, 0.25);
 }
 
+.message-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+
+.message-name-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
 .message-name {
   font-family: 'Cormorant Garamond', serif;
   font-size: 17px;
   font-weight: 600;
   color: var(--dark);
-  margin-bottom: 4px;
-  display: flex;
+}
+
+.message-time {
+  font-family: 'Jost', sans-serif;
+  font-size: 11px;
+  color: var(--green);
+  opacity: 0.75;
+  font-weight: 400;
+  display: inline-flex;
   align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
+  white-space: nowrap;
 }
 
 .message-text {
