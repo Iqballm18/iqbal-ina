@@ -172,8 +172,8 @@ let fadeInterval = null;
 
 /* Playlist data */
 const playlist = [
-  { src: 'media/Wave to Earth - love. .m4a', title: 'love.', artist: 'Wave to Earth' },
   { src: 'media/Sheila on 7 - Hari Bersamanya.m4a', title: 'Hari Bersamanya', artist: 'Sheila on 7' },
+  { src: 'media/Wave to Earth - love.m4a', title: 'love.', artist: 'Wave to Earth' },
   { src: 'media/Yung Kai - Blue.m4a', title: 'Blue', artist: 'Yung Kai' },
   { src: "media/Paul Partohap - THANK YOU 4 LOVIN' ME.m4a", title: "Thank You 4 Lovin' Me", artist: 'Paul Partohap' },
   { src: 'media/Barasuara - Terbuang Dalam Waktu.m4a', title: 'Terbuang Dalam Waktu', artist: 'Barasuara' }
@@ -610,6 +610,10 @@ function getStatusClass(status = '') {
   return '';
 }
 
+let allMessages = [];
+let currentMessagesPage = 1;
+const MESSAGES_PER_PAGE = 5;
+
 async function loadMessages() {
   const list = document.getElementById('messages-list');
   if (!list) return;
@@ -619,30 +623,103 @@ async function loadMessages() {
     const res = await fetch(SCRIPT_URL);
     const data = await res.json();
 
-    if (!data.length) {
+    if (!Array.isArray(data) || !data.length) {
       list.innerHTML = '<p style="text-align:center;font-size:12px;opacity:0.5;padding:20px 0;">Belum ada ucapan.</p>';
+      const controls = document.getElementById('pagination-controls');
+      if (controls) controls.style.display = 'none';
       return;
     }
 
-    list.innerHTML = data.map(item => {
-      const initial = item.nama ? item.nama.trim().charAt(0).toUpperCase() : '💌';
-      const statusCls = getStatusClass(item.status);
-      return `
-      <div class="message-item revealed pop-in">
-        <div class="message-icon">${escapeHtml(initial)}</div>
-        <div style="flex:1;">
-          <div class="message-name">
-            ${escapeHtml(item.nama)}
-            ${item.status ? `<span class="message-status ${statusCls}">${escapeHtml(item.status)}</span>` : ''}
-          </div>
-          <div class="message-text">${escapeHtml(item.pesan)}</div>
-        </div>
-      </div>
-    `;
-    }).join('');
+    allMessages = data;
+    currentMessagesPage = 1;
+    renderMessagesPage();
 
   } catch (err) {
+    console.error('Error loading messages:', err);
     list.innerHTML = '<p style="text-align:center;color:var(--rose);font-size:12px;padding:20px 0;">Gagal memuat ucapan.</p>';
+    const controls = document.getElementById('pagination-controls');
+    if (controls) controls.style.display = 'none';
+  }
+}
+
+function renderMessagesPage() {
+  const list = document.getElementById('messages-list');
+  const controls = document.getElementById('pagination-controls');
+  const prevBtn = document.getElementById('prev-page');
+  const nextBtn = document.getElementById('next-page');
+  const pageInfo = document.getElementById('page-info');
+
+  if (!list) return;
+
+  const totalItems = allMessages.length;
+  const totalPages = Math.ceil(totalItems / MESSAGES_PER_PAGE);
+
+  if (totalPages <= 0) {
+    list.innerHTML = '<p style="text-align:center;font-size:12px;opacity:0.5;padding:20px 0;">Belum ada ucapan.</p>';
+    if (controls) controls.style.display = 'none';
+    return;
+  }
+
+  if (currentMessagesPage < 1) currentMessagesPage = 1;
+  if (currentMessagesPage > totalPages) currentMessagesPage = totalPages;
+
+  const startIdx = (currentMessagesPage - 1) * MESSAGES_PER_PAGE;
+  const endIdx = startIdx + MESSAGES_PER_PAGE;
+  const pageItems = allMessages.slice(startIdx, endIdx);
+
+  list.innerHTML = pageItems.map(item => {
+    const initial = item.nama ? item.nama.trim().charAt(0).toUpperCase() : '💌';
+    const statusCls = getStatusClass(item.status);
+    return `
+    <div class="message-item revealed pop-in">
+      <div class="message-icon">${escapeHtml(initial)}</div>
+      <div style="flex:1;">
+        <div class="message-name">
+          ${escapeHtml(item.nama)}
+          ${item.status ? `<span class="message-status ${statusCls}">${escapeHtml(item.status)}</span>` : ''}
+        </div>
+        <div class="message-text">${escapeHtml(item.pesan)}</div>
+      </div>
+    </div>
+  `;
+  }).join('');
+
+  if (controls) {
+    if (totalPages > 1) {
+      controls.style.display = 'flex';
+      if (prevBtn) {
+        prevBtn.style.display = 'inline-flex';
+        prevBtn.disabled = (currentMessagesPage === 1);
+      }
+      if (nextBtn) {
+        nextBtn.style.display = 'inline-flex';
+        nextBtn.disabled = (currentMessagesPage === totalPages);
+      }
+      if (pageInfo) {
+        pageInfo.textContent = `Halaman ${currentMessagesPage} dari ${totalPages}`;
+      }
+    } else {
+      controls.style.display = 'none';
+    }
+  }
+}
+
+function changePage(dir) {
+  const totalPages = Math.ceil(allMessages.length / MESSAGES_PER_PAGE);
+  const newPage = currentMessagesPage + dir;
+
+  if (newPage >= 1 && newPage <= totalPages) {
+    currentMessagesPage = newPage;
+    renderMessagesPage();
+
+    const listContainer = document.getElementById('messages-list');
+    if (listContainer) {
+      listContainer.scrollTop = 0;
+      const rect = listContainer.getBoundingClientRect();
+      if (rect.top < 0) {
+        listContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
   }
 }
 
@@ -944,9 +1021,7 @@ function copyText(elementId, btn) {
   });
 }
 
-function changePage(dir) {
-  // placeholder for pagination if needed
-}
+
 
 /* ============================================================
    SCROLL INDICATOR — hide after first scroll
