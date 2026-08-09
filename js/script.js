@@ -806,14 +806,12 @@ function renderMessagesPage() {
     return `
     <div class="message-item revealed pop-in">
       <div class="message-icon">${escapeHtml(initial)}</div>
-      <div style="flex:1;">
+      <div style="flex:1;min-width:0;">
         <div class="message-header">
-          <div class="message-name-group">
-            <span class="message-name">${escapeHtml(item.nama)}</span>
-            ${item.status ? `<span class="message-status ${statusCls}">${escapeHtml(item.status)}</span>` : ''}
-          </div>
+          <span class="message-name">${escapeHtml(item.nama)}</span>
           <span class="message-time"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-1px;margin-right:3px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>${escapeHtml(timeAgo)}</span>
         </div>
+        ${item.status ? `<div class="message-status-row"><span class="message-status ${statusCls}">${escapeHtml(item.status)}</span></div>` : ''}
         <div class="message-text">${escapeHtml(item.pesan)}</div>
       </div>
     </div>
