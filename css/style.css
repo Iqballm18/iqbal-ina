@@ -1091,9 +1091,11 @@ section {
   content: '';
   position: absolute;
   inset: 0;
-  background:
+  background-image:
     radial-gradient(ellipse at 15% 50%, rgba(201, 169, 110, 0.18) 0%, transparent 55%),
-    radial-gradient(ellipse at 85% 50%, rgba(201, 130, 107, 0.14) 0%, transparent 55%);
+    radial-gradient(ellipse at 85% 50%, rgba(201, 130, 107, 0.14) 0%, transparent 55%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cg fill='none' stroke='%23c9a96e' stroke-width='1.2' opacity='0.105'%3E%3Cpath d='M20 10 Q35 25, 20 40 Q5 25, 20 10 Z M20 10 V40 M70 60 Q85 75, 70 90 Q55 75, 70 60 Z M70 60 V90 M60 20 Q80 15, 90 35 Q70 40, 60 20 Z M10 70 Q30 65, 40 85 Q20 90, 10 70 Z M45 45 Q50 30, 65 35 Q55 55, 45 45 Z'/%3E%3Ccircle cx='20' cy='25' r='1.5' fill='%23c9a96e'/%3E%3Ccircle cx='70' cy='75' r='1.5' fill='%23c9a96e'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: no-repeat, no-repeat, repeat;
   pointer-events: none;
 }
 
@@ -1117,6 +1119,148 @@ section {
 }
 .countdown-corner-filigree.tl { top: 12px; left: 12px; }
 .countdown-corner-filigree.tr { top: 12px; right: 12px; }
+
+/* Micro floating sparkles overlay in Save The Date */
+.countdown-sparkles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  border-radius: 24px;
+  z-index: 1;
+}
+
+.cd-sparkle {
+  position: absolute;
+  color: var(--gold-light);
+  opacity: 0;
+  animation: cdSparkleFloat 3.8s ease-in-out infinite;
+  filter: drop-shadow(0 0 6px rgba(201, 169, 110, 0.7));
+}
+
+.cd-sparkle.s1 {
+  top: 16px;
+  left: 24px;
+  font-size: 17px;
+  animation-delay: 0.1s;
+  color: var(--gold-light);
+}
+
+.cd-sparkle.s2 {
+  top: 22px;
+  right: 28px;
+  font-size: 15px;
+  animation-delay: 1.2s;
+  color: var(--gold-light);
+}
+
+.cd-sparkle.s3 {
+  bottom: 20px;
+  left: 32px;
+  font-size: 18px;
+  animation-delay: 2.0s;
+  color: var(--gold-light);
+}
+
+.cd-sparkle.s4 {
+  bottom: 24px;
+  right: 36px;
+  font-size: 16px;
+  animation-delay: 2.8s;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.cd-sparkle.s5 {
+  top: 48%;
+  left: 16px;
+  font-size: 14px;
+  animation-delay: 1.7s;
+  color: var(--gold);
+}
+
+.cd-sparkle.s6 {
+  top: 46%;
+  right: 18px;
+  font-size: 16px;
+  animation-delay: 0.7s;
+  color: var(--gold-light);
+}
+
+.cd-sparkle.s7 {
+  top: 20px;
+  left: 48%;
+  font-size: 15px;
+  animation-delay: 2.4s;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+@keyframes cdSparkleFloat {
+  0% {
+    transform: translateY(8px) scale(0.7) rotate(0deg);
+    opacity: 0;
+  }
+  50% {
+    transform: translateY(-8px) scale(1.2) rotate(30deg);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateY(-20px) scale(0.7) rotate(60deg);
+    opacity: 0;
+  }
+}
+
+/* Header Icon Wrapper & Animation in Save The Date */
+.countdown-icon-wrapper {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(201, 169, 110, 0.22), rgba(255, 255, 255, 0.1));
+  border: 1.5px solid rgba(201, 169, 110, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+  box-shadow:
+    0 0 0 5px rgba(201, 169, 110, 0.12),
+    0 4px 20px rgba(0, 0, 0, 0.15);
+  animation: countdownIconPulse 3s ease-in-out infinite;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  z-index: 2;
+}
+
+.countdown-icon-wrapper:hover {
+  transform: scale(1.1) rotate(6deg);
+  border-color: var(--gold-light);
+  box-shadow:
+    0 0 0 8px rgba(201, 169, 110, 0.22),
+    0 0 24px rgba(201, 169, 110, 0.4);
+}
+
+.countdown-calendar-icon {
+  animation: calendarIconSwing 4s ease-in-out infinite;
+}
+
+@keyframes countdownIconPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 5px rgba(201, 169, 110, 0.12), 0 4px 20px rgba(0, 0, 0, 0.15);
+  }
+  50% {
+    box-shadow: 0 0 0 9px rgba(201, 169, 110, 0.22), 0 0 24px rgba(201, 169, 110, 0.35);
+  }
+}
+
+@keyframes calendarIconSwing {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-4deg);
+  }
+  75% {
+    transform: rotate(4deg);
+  }
+}
 
 #countdown-section .section-label {
   color: var(--gold-light);
@@ -2306,9 +2450,11 @@ footer::before {
   content: '';
   position: absolute;
   inset: 0;
-  background:
+  background-image:
     radial-gradient(ellipse at 50% 0%, rgba(201, 169, 110, 0.18) 0%, transparent 60%),
-    radial-gradient(ellipse at 20% 100%, rgba(165, 184, 152, 0.15) 0%, transparent 55%);
+    radial-gradient(ellipse at 20% 100%, rgba(165, 184, 152, 0.15) 0%, transparent 55%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cg fill='none' stroke='%23c9a96e' stroke-width='1.2' opacity='0.105'%3E%3Cpath d='M20 10 Q35 25, 20 40 Q5 25, 20 10 Z M20 10 V40 M70 60 Q85 75, 70 90 Q55 75, 70 60 Z M70 60 V90 M60 20 Q80 15, 90 35 Q70 40, 60 20 Z M10 70 Q30 65, 40 85 Q20 90, 10 70 Z M45 45 Q50 30, 65 35 Q55 55, 45 45 Z'/%3E%3Ccircle cx='20' cy='25' r='1.5' fill='%23c9a96e'/%3E%3Ccircle cx='70' cy='75' r='1.5' fill='%23c9a96e'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: no-repeat, no-repeat, repeat;
   pointer-events: none;
 }
 
@@ -4139,19 +4285,6 @@ footer .footer-credit {
   transform: translateY(0);
 }
 
-/* ============================================================
-   FOOTER GRADIENT TRANSITION — subtle top fade on footer itself
-   ============================================================ */
-footer::before {
-  content: '';
-  position: absolute;
-  top: -40px;
-  left: 0;
-  right: 0;
-  height: 40px;
-  background: linear-gradient(to bottom, transparent, var(--green));
-  pointer-events: none;
-}
 
 /* ============================================================
    SECTION SPACING IMPROVEMENTS

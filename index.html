@@ -311,16 +311,31 @@
     <!-- ===== COUNTDOWN ===== -->
     <div id="countdown-section">
       <div class="countdown-glass-card reveal">
-        <svg class="countdown-corner-filigree tl" width="40" height="40" viewBox="0 0 50 50" fill="none"
-          aria-hidden="true">
-          <path d="M2 2 H48 M2 2 V48 M2 12 C12 12 12 2 12 2 M2 22 C22 22 22 2 22 2" stroke="var(--gold)"
-            stroke-width="0.8" opacity="0.55" />
-        </svg>
-        <svg class="countdown-corner-filigree tr" width="40" height="40" viewBox="0 0 50 50" fill="none"
-          aria-hidden="true">
-          <path d="M48 2 H2 M48 2 V48 M48 12 C38 12 38 2 38 2 M48 22 C28 22 28 2 28 2" stroke="var(--gold)"
-            stroke-width="0.8" opacity="0.55" />
-        </svg>
+        <!-- Micro floating sparkles overlay -->
+        <div class="countdown-sparkles" aria-hidden="true">
+          <span class="cd-sparkle s1">✦</span>
+          <span class="cd-sparkle s2">✧</span>
+          <span class="cd-sparkle s3">✦</span>
+          <span class="cd-sparkle s4">❀</span>
+          <span class="cd-sparkle s5">✧</span>
+          <span class="cd-sparkle s6">✦</span>
+          <span class="cd-sparkle s7">❀</span>
+        </div>
+
+        <div class="countdown-icon-wrapper reveal">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--gold-light)" stroke-width="1.8"
+            stroke-linecap="round" stroke-linejoin="round" class="countdown-calendar-icon" aria-label="Ikon Kalender">
+            <rect width="18" height="18" x="3" y="4" rx="2" opacity="0.9" />
+            <path d="M16 2v4" />
+            <path d="M8 2v4" />
+            <path d="M3 10h18" />
+            <path d="M8 14h.01" />
+            <path d="M12 14h.01" />
+            <path d="M16 14h.01" />
+            <path d="M8 18h.01" />
+            <path d="M12 18h.01" opacity="0.65" />
+          </svg>
+        </div>
 
         <div class="section-label">Save The Date</div>
         <div class="section-title countdown-date-title">Minggu, 23 Agustus 2026</div>
