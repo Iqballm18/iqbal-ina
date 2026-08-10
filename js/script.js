@@ -115,20 +115,20 @@ function spawnPetals(container, count) {
     const templateIdx = Math.floor(Math.random() * PETAL_TEMPLATES.length);
     const animType = (i % 3) + 1;
 
-    // Depth & size layer distribution
+    // Depth & size layer distribution (Natural balanced speed)
     const depthRand = Math.random();
     let depthClass = 'petal-md';
     let baseSize = 16 + Math.random() * 8;  // 16px - 24px
-    let baseDur = 8 + Math.random() * 8;     // 8s - 16s
+    let baseDur = 8 + Math.random() * 6;     // 8s - 14s
 
     if (depthRand < 0.3) {
       depthClass = 'petal-bg';
       baseSize = 10 + Math.random() * 6;    // 10px - 16px
-      baseDur = 14 + Math.random() * 8;     // 14s - 22s
+      baseDur = 11 + Math.random() * 5;     // 11s - 16s
     } else if (depthRand > 0.78) {
       depthClass = 'petal-fg';
       baseSize = 24 + Math.random() * 10;   // 24px - 34px
-      baseDur = 7 + Math.random() * 6;      // 7s - 13s
+      baseDur = 7 + Math.random() * 5;      // 7s - 12s
     }
 
     p.className = `petal petal-anim-${animType} ${depthClass}`;
@@ -150,7 +150,7 @@ function spawnPetals(container, count) {
 
 function spawnMainPetals() {
   const main = document.getElementById('main-content');
-  if (main) spawnPetals(main, 14);
+  if (main) spawnPetals(main, 18);
 }
 
 /* Sparkle dots — subtle twinkling gold particles */
@@ -173,6 +173,10 @@ function spawnSparkles(container, count) {
     `;
     container.appendChild(s);
   }
+}
+
+function initSakuraPetals() {
+  // Disabled fixed overlay in favor of document-integrated 3D petals
 }
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -1164,16 +1168,13 @@ function initScrollIndicatorHide() {
   const indicator = document.querySelector('.scroll-indicator');
   if (!indicator) return;
 
-  function checkScroll() {
-    if (window.scrollY > 80) {
+  window.addEventListener('scroll', function() {
+    if (window.scrollY > 450) {
       indicator.classList.add('hidden');
     } else {
       indicator.classList.remove('hidden');
     }
-  }
-
-  window.addEventListener('scroll', checkScroll, { passive: true });
-  checkScroll();
+  }, { passive: true });
 }
 
 /* ============================================================
